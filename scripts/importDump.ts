@@ -1,5 +1,11 @@
 // Make sure both databases have been properly set up before this script is run!
 // This script is idempotent; running it multiple times will not import twice the rows.
+//
+// Invoke this script with:
+//
+//   npm run import
+//
+// It'll wrap this script using ts-node and run it appropriately
 
 // Reference:
 //   https://github.com/iptq/omdb/blob/laravel/omdb/app/Console/Commands/ImportDump.php

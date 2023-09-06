@@ -4,12 +4,8 @@ import { Kysely, MysqlDialect } from "kysely";
 
 const dialect = new MysqlDialect({
   pool: createPool({
-    database: "omdb",
-    host: "localhost",
-    user: "root",
-    password: "example",
-    port: 3306,
-    connectionLimit: 10,
+    uri: process.env.DATABASE_URL,
+    connectionLimit: 16,
   }),
 });
 
