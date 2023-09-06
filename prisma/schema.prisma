@@ -210,10 +210,10 @@ model UserRelation {
 model OmdbUser {
     UserID Int @id
 
-    AccessToken  String
-    RefreshToken String
+    AccessToken  String?
+    RefreshToken String?
 
-    Weight           Decimal  @db.Decimal(6, 4)
+    Weight           Decimal? @db.Decimal(6, 4)
     DoTrueRandom     Boolean  @default(false)
     CustomRatings    Json     @default("{}")
     LastAccessedSite DateTime @default(now())

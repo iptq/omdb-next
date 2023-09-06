@@ -1,0 +1,191 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "./generated/prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("OLD_DATABASE_URL")
+}
+
+model apikeys {
+    ApiID  Int     @id @default(autoincrement())
+    Name   String? @db.Text
+    ApiKey String? @unique(map: "ApiKey", length: 255) @db.Text
+    UserID Int?
+}
+
+model beatmap_creators {
+    BeatmapID Int
+    CreatorID Int
+
+    @@id([BeatmapID, CreatorID])
+    @@index([BeatmapID], map: "idx_BeatmapID")
+}
+
+model beatmap_edit_requests {
+    EditID    Int                           @id @default(autoincrement())
+    BeatmapID Int?
+    SetID     Int?
+    UserID    Int
+    EditData  Json
+    Timestamp DateTime                      @default(now()) @db.Timestamp(0)
+    Status    beatmap_edit_requests_Status? @default(Pending)
+    EditorID  Int?
+}
+
+model beatmaps {
+    BeatmapID       Int       @id @db.UnsignedMediumInt
+    SetID           Int?      @db.UnsignedMediumInt
+    SetCreatorID    Int?
+    DifficultyName  String?   @db.VarChar(255)
+    Mode            Int       @default(0) @db.UnsignedTinyInt
+    Status          Int       @default(0) @db.TinyInt
+    SR              Float     @default(0) @db.Float
+    Rating          String?   @db.VarChar(45)
+    ChartRank       Int?
+    ChartYearRank   Int?
+    Timestamp       DateTime? @default(now()) @db.Timestamp(0)
+    RatingCount     Int?
+    WeightedAvg     Float?    @db.Float
+    Genre           Int?
+    Lang            Int?
+    Artist          String?   @db.VarChar(255)
+    Title           String?   @db.VarChar(255)
+    DateRanked      DateTime? @db.Timestamp(0)
+    Blacklisted     Boolean   @default(false)
+    BlacklistReason String?   @db.Text
+    controversy     Decimal?  @db.Decimal(10, 8)
+
+    @@index([DifficultyName, Artist, Title], map: "Artist")
+    @@index([SetID], map: "beatmapset_id")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model beatmapset_nominators {
+    SetID       Int?
+    NominatorID Int?
+    Mode        Int?
+
+    @@unique([SetID, NominatorID, Mode], map: "beatmapset_nominators_pk")
+    @@index([SetID], map: "beatmapset_nominators_SetID_index")
+    @@ignore
+}
+
+model blacklist {
+    UserID Int @id
+}
+
+model comments {
+    CommentID Int       @id @default(autoincrement())
+    UserID    Int
+    SetID     Int
+    Comment   String?   @db.Text
+    date      DateTime? @default(now()) @db.Timestamp(0)
+}
+
+model descriptor_votes {
+    VoteID       Int     @id @default(autoincrement())
+    BeatmapID    Int
+    UserID       Int
+    Vote         Boolean
+    DescriptorID Int
+
+    @@unique([BeatmapID, UserID, DescriptorID], map: "descriptor_votes_pk2")
+    @@index([BeatmapID], map: "descriptor_votes_BeatmapID_index")
+}
+
+model descriptors {
+    DescriptorID     Int     @id @default(autoincrement())
+    Name             String  @unique(map: "descriptors_pk2") @db.VarChar(40)
+    ShortDescription String? @db.Text
+    ParentID         Int?
+    Usable           Boolean @default(true)
+}
+
+model logs {
+    LogID   Int   @id @default(autoincrement())
+    UserID  Int
+    LogData Json?
+}
+
+model mappernames {
+    UserID   Int     @id
+    Username String? @db.VarChar(255)
+}
+
+model rating_tags {
+    UserID    Int?
+    BeatmapID Int?
+    Tag       String? @db.VarChar(150)
+    TagID     Int     @id @default(autoincrement())
+
+    @@unique([BeatmapID, UserID, Tag], map: "rating_tags_pk")
+}
+
+model ratings {
+    RatingID  Int      @id @default(autoincrement())
+    BeatmapID Int
+    UserID    Int
+    Score     Decimal? @db.Decimal(2, 1)
+    date      DateTime @db.DateTime(0)
+
+    @@index([BeatmapID], map: "idx_beatmapID")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model setretrieveinfo {
+    LastRetrieval DateTime? @db.DateTime(0)
+    LastDate      DateTime? @db.Date
+
+    @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_correlations {
+    user1_id    Int?
+    user2_id    Int?
+    correlation Float? @db.Float
+
+    @@unique([user1_id, user2_id], map: "user_correlations_pk")
+    @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model user_relations {
+    UserIDFrom Int?
+    UserIDTo   Int?
+    type       Int?
+
+    @@unique([UserIDTo, UserIDFrom], map: "user_relations_pk")
+    @@ignore
+}
+
+model users {
+    UserID           Int      @id
+    Username         String?  @db.VarChar(255)
+    AccessToken      String?  @db.VarChar(2000)
+    RefreshToken     String?  @db.VarChar(2000)
+    banned           Boolean? @default(false)
+    Weight           Decimal? @db.Decimal(6, 4)
+    DoTrueRandom     Boolean  @default(false)
+    Custom00Rating   String   @default("") @db.VarChar(60)
+    Custom05Rating   String   @default("") @db.VarChar(60)
+    Custom10Rating   String   @default("") @db.VarChar(60)
+    Custom15Rating   String   @default("") @db.VarChar(60)
+    Custom20Rating   String   @default("") @db.VarChar(60)
+    Custom25Rating   String   @default("") @db.VarChar(60)
+    Custom30Rating   String   @default("") @db.VarChar(60)
+    Custom35Rating   String   @default("") @db.VarChar(60)
+    Custom40Rating   String   @default("") @db.VarChar(60)
+    Custom45Rating   String   @default("") @db.VarChar(60)
+    Custom50Rating   String   @default("") @db.VarChar(60)
+    LastAccessedSite DateTime @default(now()) @db.Timestamp(0)
+    HideRatings      Boolean? @default(false)
+}
+
+enum beatmap_edit_requests_Status {
+    Pending
+    Denied
+    Approved
+}
