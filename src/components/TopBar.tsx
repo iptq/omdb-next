@@ -14,14 +14,14 @@ export default function TopBar() {
             OMDB
           </a>
 
-          <a href="/">
+          <a href="/" className={styles.link}>
             <div className="topBarLink">home</div>
           </a>
-          <a href="/charts/">
+          <a href="/charts/" className={styles.link}>
             <div className="topBarLink">charts</div>
           </a>
 
-          <div className={styles.topBarDropDown}>
+          <div className={classNames(styles.topBarDropDown, styles.link)}>
             <div className="topBarLink topBarDropDownButton">maps</div>
             <div className={styles.dropdownContent}>
               <a href="/maps/?m=08&amp;y=2023">latest</a>

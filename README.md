@@ -20,3 +20,17 @@ This uses a standard Next.js project layout.
   npx prisma db pull --schema=./old-db/schema.prisma
   npx prisma generate --schema=./old-db/schema.prisma
   ```
+
+  How I'm migrating the data
+
+  ```mermaid
+  flowchart TD
+    F --> E --> D
+    A --> B --> C --> D
+    A[data dump]
+    B[import into a running mysql database]
+    C[prisma db pull from database]
+    D[import dump script]
+    E[kysely type definitions]
+    F[clean-room prisma schemas based on the original]
+  ```

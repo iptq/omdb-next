@@ -29,6 +29,8 @@ async function main() {
   const apiKey = await getApiKey();
 
   await importUsers();
+  await importBeatmaps();
+
   console.log("done.");
 
   process.exit(0);
@@ -54,7 +56,7 @@ async function getApiKey() {
 }
 
 async function importUsers() {
-  console.log("importing users...");
+  console.log("Importing users...");
 
   let cursor;
   while (true) {
@@ -99,11 +101,6 @@ async function importUsers() {
       .onDuplicateKeyUpdate((eb) => ({
         Username: eb.ref("OsuUser.Username"),
       }))
-      //   .onConflict((oc) =>
-      //     oc
-      //       .column("UserID")
-      //       .doUpdateSet((eb) => ({ Username: eb.ref("OsuUser.Username") }))
-      //   )
       .execute();
     await newClient
       .insertInto("OmdbUser")
@@ -111,18 +108,15 @@ async function importUsers() {
       .onDuplicateKeyUpdate((eb) => ({
         CustomRatings: eb.ref("OmdbUser.CustomRatings"),
       }))
-      //   .onConflict((oc) =>
-      //     oc.column("UserID").doUpdateSet((eb) => ({
-      //       CustomRatings: eb.ref("OmdbUser.CustomRatings"),
-      //     }))
-      //   )
       .execute();
 
     const lastUser = chunkOfUsers[chunkOfUsers.length - 1];
     cursor = lastUser.UserID;
   }
 
-  console.log("imported users.");
+  console.log("Imported users.");
 }
+
+async function importBeatmaps() {}
 
 main();
