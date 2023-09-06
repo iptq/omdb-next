@@ -6,14 +6,17 @@ import StarRatingDisplay from "./StarRatingDisplay";
 export async function getData() {
   const prisma = new PrismaClient();
 
-  const ratings = await prisma.ratings.findMany({ take: 20 });
-  const comments = await prisma.comments.findMany({ take: 20 });
+  const ratings = await prisma.rating.findMany({
+    take: 20,
+    include: { Beatmap: { select: { SetID: true } } },
+  });
+  const comments = await prisma.comment.findMany({ take: 20 });
 
   return { ratings, comments };
 }
 
 export default async function RatingTable() {
-  const { ratings} = await getData();
+  const { ratings } = await getData();
 
   return (
     <div
@@ -23,9 +26,9 @@ export default async function RatingTable() {
         return (
           <div className={classNames(styles.ratingContainer)}>
             <div className={styles.setImage}>
-              <a href={`/mapset/${rating.SetID}`}>
+              <a href={`/mapset/${rating.Beatmap.SetID}`}>
                 <img
-                  src={`https://b.ppy.sh/thumb/${rating.SetID}l.jpg`}
+                  src={`https://b.ppy.sh/thumb/${rating.Beatmap.SetID}l.jpg`}
                   className={styles.diffThumb}
                   //   onerror="this.onerror=null; this.src='/charts/INF.png';"
                 />
@@ -40,15 +43,16 @@ export default async function RatingTable() {
                 />
               </a>
             </div>
-            
-                <div className="flex-child" style={{flex:"0 0 66%"}}>
-                    {/* <a style="display:flex;" href="/profile/<?php echo $row["UserID"]; ?>">
+
+            <div className="flex-child" style={{ flex: "0 0 66%" }}>
+              {/* <a style="display:flex;" href="/profile/<?php echo $row["UserID"]; ?>">
                         <?php echo GetUserNameFromId($row["UserID"], $conn); ?>
                     </a> */}
-                    <StarRatingDisplay rating={rating.Score} /> on
-                        <a href={`/mapset/${rating.SetID}`}>" . mb_strimwidth(htmlspecialchars($row["DifficultyName"]), 0, 35, "...") . "</a>";
-                    ?>
-                </div>
+              <StarRatingDisplay rating={rating.Score} /> on
+              <a href={`/mapset/${rating.Beatmap.SetID}`}>
+                {/* mb_strimwidth(htmlspecialchars($row["DifficultyName"]), 0, 35, "...") . "</a>"; */}
+              </a>
+            </div>
           </div>
         );
       })}

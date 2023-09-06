@@ -37,4 +37,4 @@ next-env.d.ts
 dev.db
 docker-data
 
-/data.sql
+/data*.sql
