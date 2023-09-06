@@ -1,6 +1,18 @@
-generator client {
-    provider        = "prisma-client-js"
+// generator client {
+//     provider        = "prisma-client-js"
+//     previewFeatures = ["fullTextIndex"]
+// }
+
+generator kysely {
+    provider        = "prisma-kysely"
     previewFeatures = ["fullTextIndex"]
+
+    // Optionally provide a destination directory for the generated file
+    // and a filename of your choice
+    output       = "../src/db"
+    fileName     = "types.ts"
+    // Optionally generate runtime enums to a separate file
+    enumFileName = "enums.ts"
 }
 
 datasource db {
@@ -20,8 +32,10 @@ model BeatmapCreator {
     BeatmapID Int
     CreatorID Int
 
+    Beatmap Beatmap @relation(fields: [BeatmapID], references: [BeatmapID])
+    Creator OsuUser @relation(fields: [CreatorID], references: [UserID])
+
     @@id([BeatmapID, CreatorID])
-    @@index([BeatmapID], map: "idx_BeatmapID")
 }
 
 model BeatmapEditRequest {
@@ -33,7 +47,8 @@ model BeatmapEditRequest {
     Status    BeatmapEditRequestStatus @default(Pending)
     EditorID  Int?
 
-    User OmdbUser @relation(fields: [UserID], references: [UserID])
+    Beatmap Beatmap  @relation(fields: [BeatmapID], references: [BeatmapID])
+    User    OmdbUser @relation(fields: [UserID], references: [UserID])
 }
 
 model Beatmap {
@@ -54,10 +69,12 @@ model Beatmap {
     BlacklistReason String?   @db.Text
     controversy     Decimal?  @db.Decimal(10, 8)
 
-    BeatmapSet      BeatmapSet       @relation(fields: [SetID], references: [SetID])
-    RatingTags      RatingTag[]
-    DescriptorVotes DescriptorVote[]
-    Ratings         Rating[]
+    BeatmapSet          BeatmapSet           @relation(fields: [SetID], references: [SetID])
+    RatingTags          RatingTag[]
+    DescriptorVotes     DescriptorVote[]
+    Ratings             Rating[]
+    Creators            BeatmapCreator[]
+    BeatmapEditRequests BeatmapEditRequest[]
 }
 
 model BeatmapSet {
@@ -73,22 +90,24 @@ model BeatmapSet {
     TitleUnicode  String
     DateRanked    DateTime @db.Timestamp(0)
 
-    Host     OsuUser   @relation(fields: [HostID], references: [UserID])
-    Beatmaps Beatmap[]
-    Comments Comment[]
+    Host                OsuUser               @relation(fields: [HostID], references: [UserID])
+    Beatmaps            Beatmap[]
+    Comments            Comment[]
+    BeatmapSetNominator BeatmapSetNominator[]
 
     @@fulltext([Title, Artist])
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model BeatmapSetNominator {
-    SetID       Int?
-    NominatorID Int?
-    Mode        Int?
+    SetID       Int
+    NominatorID Int
+    Mode        Int
 
-    @@unique([SetID, NominatorID, Mode], map: "beatmapset_nominators_pk")
-    @@index([SetID], map: "beatmapset_nominators_SetID_index")
-    @@ignore
+    BeatmapSet BeatmapSet @relation(fields: [SetID], references: [SetID])
+    Nominator  OsuUser    @relation(fields: [NominatorID], references: [UserID])
+
+    @@unique([SetID, NominatorID, Mode])
 }
 
 model Comment {
@@ -113,12 +132,12 @@ model DescriptorVote {
     User       OmdbUser   @relation(fields: [UserID], references: [UserID])
     Descriptor Descriptor @relation(fields: [DescriptorID], references: [DescriptorID])
 
-    @@unique([BeatmapID, UserID, DescriptorID], map: "descriptor_votes_pk2")
+    @@unique([BeatmapID, UserID, DescriptorID])
 }
 
 model Descriptor {
     DescriptorID     Int     @id @default(autoincrement())
-    Name             String  @unique(map: "descriptors_pk2") @db.VarChar(40)
+    Name             String  @unique @db.VarChar(40)
     ShortDescription String? @db.Text
     ParentID         Int?
     Usable           Boolean @default(true)
@@ -175,7 +194,7 @@ model UserCorrelation {
     User1 OmdbUser @relation(name: "user1", fields: [User1ID], references: [UserID])
     User2 OmdbUser @relation(name: "user2", fields: [User2ID], references: [UserID])
 
-    @@unique([User1ID, User2ID], map: "user_correlations_pk")
+    @@unique([User1ID, User2ID])
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -184,8 +203,7 @@ model UserRelation {
     UserIDTo   Int?
     type       Int?
 
-    @@unique([UserIDTo, UserIDFrom], map: "user_relations_pk")
-    @@map("user_relations")
+    @@unique([UserIDTo, UserIDFrom])
     @@ignore
 }
 
@@ -220,8 +238,10 @@ model OsuUser {
     Username String  @db.VarChar(255)
     Banned   Boolean @default(false)
 
-    OmdbUser          OmdbUser?
-    HostedBeatmapSets BeatmapSet[]
+    OmdbUser             OmdbUser?
+    HostedBeatmapSets    BeatmapSet[]
+    NominatedBeatmapSets BeatmapSetNominator[]
+    GuestBeatmaps        BeatmapCreator[]
 }
 
 enum BeatmapEditRequestStatus {

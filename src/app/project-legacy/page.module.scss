@@ -1,0 +1,23 @@
+.body {
+  width: 100%;
+  text-align: center;
+  padding-top: 2em;
+  padding-bottom: 5em;
+  background-color: darkslategrey;
+}
+
+.subText {
+  font-size: 11px;
+  color: #a8a8a8;
+}
+
+.box1 {
+  padding: 0.25em;
+  box-sizing: content-box;
+  height: 2em;
+}
+
+.box2 {
+  box-sizing: content-box;
+  min-height: 1.5em;
+}
