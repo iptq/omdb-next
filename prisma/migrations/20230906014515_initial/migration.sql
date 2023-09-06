@@ -56,8 +56,8 @@ CREATE TABLE `beatmaps` (
     `BlacklistReason` TEXT NULL,
     `controversy` DECIMAL(10, 8) NULL,
 
+    INDEX `Artist`(`DifficultyName`, `Artist`, `Title`),
     INDEX `beatmapset_id`(`SetID`),
-    FULLTEXT INDEX `Artist`(`DifficultyName`, `Artist`, `Title`),
     PRIMARY KEY (`BeatmapID`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

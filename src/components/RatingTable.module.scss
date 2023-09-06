@@ -1,0 +1,20 @@
+.ratingContainer {
+  background-color: var(--accent-1);
+  align-items: center;
+}
+
+.setImage {
+  margin-left: 0.5em;
+}
+
+.diffThumb {
+  height: 32px;
+  width: 32px;
+  border: 1px solid #ddd;
+  object-fit: cover;
+}
+
+.profilePicture {
+  width: 24px;
+  height: 24px;
+}

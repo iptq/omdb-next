@@ -1,20 +1,58 @@
+import classNames from "classnames";
 import styles from "./RatingTable.module.scss";
 import { PrismaClient } from "@prisma/client";
+import StarRatingDisplay from "./StarRatingDisplay";
 
 export async function getData() {
   const prisma = new PrismaClient();
 
+  const ratings = await prisma.ratings.findMany({ take: 20 });
   const comments = await prisma.comments.findMany({ take: 20 });
 
-  return { comments };
+  return { ratings, comments };
 }
 
 export default async function RatingTable() {
+  const { ratings} = await getData();
+
   return (
     <div
       className="flex-child column-when-mobile" // style="width:40%;height:32em;overflow-y:scroll;position:relative;"
     >
-      <div className="flex-container ratingContainer alternating-bg">
+      {ratings.map((rating) => {
+        return (
+          <div className={classNames(styles.ratingContainer)}>
+            <div className={styles.setImage}>
+              <a href={`/mapset/${rating.SetID}`}>
+                <img
+                  src={`https://b.ppy.sh/thumb/${rating.SetID}l.jpg`}
+                  className={styles.diffThumb}
+                  //   onerror="this.onerror=null; this.src='/charts/INF.png';"
+                />
+              </a>
+            </div>
+            <div>
+              <a href={`/profile/${rating.UserID}`}>
+                <img
+                  src={`https://s.ppy.sh/a/${rating.UserID}`}
+                  className={styles.profilePicture}
+                  title="<?php echo GetUserNameFromId($row['UserID'], $conn); ?>"
+                />
+              </a>
+            </div>
+            
+                <div className="flex-child" style={{flex:"0 0 66%"}}>
+                    {/* <a style="display:flex;" href="/profile/<?php echo $row["UserID"]; ?>">
+                        <?php echo GetUserNameFromId($row["UserID"], $conn); ?>
+                    </a> */}
+                    <StarRatingDisplay rating={rating.Score} /> on
+                        <a href={`/mapset/${rating.SetID}`}>" . mb_strimwidth(htmlspecialchars($row["DifficultyName"]), 0, 35, "...") . "</a>";
+                    ?>
+                </div>
+          </div>
+        );
+      })}
+      {/* <div className="flex-container ratingContainer alternating-bg">
         <div
           className="flex-child" // style="margin-left:0.5em;"
         >
@@ -62,7 +100,7 @@ export default async function RatingTable() {
           </div>{" "}
           on <a href="/mapset/115011">Lan</a>{" "}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

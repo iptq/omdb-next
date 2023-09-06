@@ -1,0 +1,20 @@
+.starRatingDisplay {
+  display: inline-block;
+  white-space: nowrap;
+  width: 5em;
+  padding-right: 0.25em;
+}
+
+.starBackground {
+  color: #203838;
+  z-index: 0;
+  display: inline-block;
+  position: absolute;
+}
+
+.starForeground {
+  color: white;
+  z-index: 2;
+  display: inline-block;
+  position: relative;
+}
