@@ -2,6 +2,10 @@ import { DB } from "./types"; // this is the Database interface we defined earli
 import { createPool } from "mysql2"; // do not use 'mysql2/promises'!
 import { Kysely, MysqlDialect } from "kysely";
 
+import { config } from "dotenv";
+config();
+config({ path: ".env.local", override: true });
+
 const dialect = new MysqlDialect({
   pool: createPool({
     uri: process.env.DATABASE_URL,
@@ -16,7 +20,7 @@ const dialect = new MysqlDialect({
 export const db = new Kysely<DB>({
   dialect,
   log: (event) => {
-    if (event.level === "query") {
+    if (event.level === "error") {
       console.log(event.query.sql);
       console.log(event.query.parameters);
     }

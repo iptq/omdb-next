@@ -85,10 +85,10 @@ model BeatmapSet {
     Lang  Int
 
     Artist        String
-    ArtistUnicode String
+    ArtistUnicode String?
     Title         String
-    TitleUnicode  String
-    DateRanked    DateTime @db.Timestamp(0)
+    TitleUnicode  String?
+    DateRanked    DateTime
 
     Host                OsuUser               @relation(fields: [HostID], references: [UserID])
     Beatmaps            Beatmap[]

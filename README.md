@@ -38,3 +38,8 @@ This uses a standard Next.js project layout.
     E[kysely type definitions]
     F[clean-room prisma schemas based on the original]
   ```
+
+  If you just want to run the migration:
+
+  - Make sure you set up `OSU_CLIENT_ID` and `OSU_CLIENT_SECRET` in `.env.local`
+  - Run `npm run import`

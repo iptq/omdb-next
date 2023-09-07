@@ -14,14 +14,12 @@ import { config } from "dotenv";
 config();
 config({ path: ".env.local", override: true });
 
-import { db } from "../src/db";
-import { PrismaClient, Prisma } from "../old-db/generated/prisma-client-js";
+import { db } from "../../src/db";
+import { PrismaClient, Prisma } from "../../old-db/generated/prisma-client-js";
 import { DB } from "@/db/types";
 import { InsertObject } from "kysely";
-
-export type InsertObjectOrList<DB, TB extends keyof DB> =
-  | InsertObject<DB, TB>
-  | ReadonlyArray<InsertObject<DB, TB>>;
+import { Presets, SingleBar } from "cli-progress";
+import { fetchUser, getApiKey } from "./api";
 
 const oldClient = new PrismaClient();
 const newClient = db;
@@ -34,31 +32,12 @@ async function main() {
 
   const apiKey = await getApiKey();
 
-  await importUsers();
-  await importBeatmaps();
+  // await importUsers();
+  await importBeatmaps(apiKey);
 
   console.log("done.");
 
   process.exit(0);
-}
-
-async function getApiKey() {
-  const body = new URLSearchParams({
-    client_id: process.env.OSU_CLIENT_ID!,
-    client_secret: process.env.OSU_CLIENT_SECRET!,
-    grant_type: "client_credentials",
-    scope: "public",
-  });
-  const resp = await fetch("https://osu.ppy.sh/oauth/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body,
-  });
-  const result = await resp.json();
-  console.log("Got api token.", result);
-  return result["access_token"];
 }
 
 async function importUsers() {
@@ -123,6 +102,58 @@ async function importUsers() {
   console.log("Imported users.");
 }
 
-async function importBeatmaps() {}
+// async function insertByChunk(chunkSize: number) {}
+
+async function importBeatmaps(apiKey: string) {
+  console.log("Importing beatmaps...");
+
+  console.log("user", await fetchUser(apiKey, { userId: 2688103 }));
+
+  const bar = new SingleBar({}, Presets.shades_classic);
+  const howMany = await oldClient.beatmaps.count();
+  bar.start(howMany, 0);
+
+  let cursor;
+  while (true) {
+    const findOpts: Prisma.beatmapsFindManyArgs = {
+      take: chunkSize,
+      orderBy: { BeatmapID: "asc" },
+    };
+    if (cursor) {
+      findOpts.skip = 1;
+      findOpts.cursor = { BeatmapID: cursor };
+    }
+
+    const chunkOfBeatmaps = await oldClient.beatmaps.findMany(findOpts);
+    if (chunkOfBeatmaps.length === 0) break;
+
+    const newBeatmapSets: InsertObject<DB, "BeatmapSet">[] =
+      chunkOfBeatmaps.map((oldBeatmap) => ({
+        SetID: oldBeatmap.SetID!,
+        HostID: oldBeatmap.SetCreatorID!,
+
+        Genre: oldBeatmap.Genre!,
+        Lang: oldBeatmap.Lang!,
+        Artist: oldBeatmap.Artist!,
+        Title: oldBeatmap.Title!,
+        DateRanked: oldBeatmap.DateRanked!,
+      }));
+
+    const result = await newClient
+      .insertInto("BeatmapSet")
+      .values(newBeatmapSets)
+      .onDuplicateKeyUpdate((eb) => ({
+        HostID: eb.ref("BeatmapSet.HostID"),
+        Genre: eb.ref("BeatmapSet.Genre"),
+        Lang: eb.ref("BeatmapSet.Lang"),
+        Artist: eb.ref("BeatmapSet.Artist"),
+        DateRanked: eb.ref("BeatmapSet.DateRanked"),
+      }))
+      .execute();
+    console.log("result", result.length);
+  }
+
+  console.log("Imported beatmaps.");
+}
 
 main();
