@@ -4,6 +4,10 @@ This uses a standard Next.js project layout.
 
 ## Developer Setup
 
+- Make a file `.env.local` containing these variables:
+
+  -
+
 - Next.js setup
 
   ```

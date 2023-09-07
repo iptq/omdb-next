@@ -1,11 +1,11 @@
 import { Decimal } from "@prisma/client/runtime/library";
 import styles from "./StarRatingDisplay.module.scss";
 
-export interface Props {
+export interface StarRatingDisplayProps {
   rating: Decimal;
 }
 
-export default function StarRatingDisplay({ rating }: Props) {
+export default function StarRatingDisplay({ rating }: StarRatingDisplayProps) {
   const ratingNumber = rating.toNumber();
   const overlay = [0, 1, 2, 3, 4]
     .filter((x) => x < ratingNumber)
