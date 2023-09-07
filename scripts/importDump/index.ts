@@ -145,6 +145,7 @@ async function importBeatmaps() {
 
     const newUsers: InsertObject<DB, "OsuUser">[] = [];
     const newBeatmapSets: InsertObject<DB, "BeatmapSet">[] = [];
+    const newBeatmaps: InsertObject<DB, "Beatmap">[] = [];
 
     await Promise.all(
       chunkOfBeatmaps.map(async (oldBeatmap) => {
@@ -168,6 +169,15 @@ async function importBeatmaps() {
           Title: oldBeatmap.Title!,
           DateRanked: oldBeatmap.DateRanked!,
         });
+
+        newBeatmaps.push({
+          BeatmapID: oldBeatmap.BeatmapID,
+          SetID: oldBeatmap.SetID!,
+          DifficultyName: oldBeatmap.DifficultyName!,
+          Mode: oldBeatmap.Mode,
+          Status: oldBeatmap.Status,
+          SR: oldBeatmap.SR,
+        });
       })
     );
 
@@ -182,6 +192,17 @@ async function importBeatmaps() {
         Artist: eb.ref("BeatmapSet.Artist"),
         Title: eb.ref("BeatmapSet.Title"),
         DateRanked: eb.ref("BeatmapSet.DateRanked"),
+      }))
+      .execute();
+    await newClient
+      .insertInto("Beatmap")
+      .values(newBeatmaps)
+      .onDuplicateKeyUpdate((eb) => ({
+        SetID: eb.ref("Beatmap.SetID"),
+        DifficultyName: eb.ref("Beatmap.DifficultyName"),
+        Mode: eb.ref("Beatmap.Mode"),
+        Status: eb.ref("Beatmap.Status"),
+        SR: eb.ref("Beatmap.SR"),
       }))
       .execute();
 
