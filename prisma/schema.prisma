@@ -239,6 +239,7 @@ model OsuUser {
     Banned   Boolean @default(false)
 
     LastFetched DateTime
+    ApiInfo     Json?
 
     OmdbUser             OmdbUser?
     HostedBeatmapSets    BeatmapSet[]
