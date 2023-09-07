@@ -11,6 +11,7 @@ export async function insertOsuUsers(
     .onDuplicateKeyUpdate((eb) => ({
       Username: eb.ref("OsuUser.Username"),
       LastFetched: eb.ref("OsuUser.LastFetched"),
+      ApiInfo: eb.ref("OsuUser.ApiInfo"),
     }))
     .execute();
 }

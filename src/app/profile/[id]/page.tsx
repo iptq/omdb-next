@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
 export default async function Page({ params }) {
   const { id } = params;
   const user = await getUser(parseInt(id));
-  return <div>Hellosu {JSON.stringify(user)}</div>;
+  return <div>Hellosu {JSON.stringify(user?.Username)}</div>;
 }
 
 async function getUser(id: number) {

@@ -34,9 +34,10 @@ async function main() {
 
   api = await Api.new();
 
-  // await importUsers();
+  await importUsers();
   // await importBeatmaps();
-  await importRatings();
+  // await importRatings();
+  // await importComments();
 
   console.log("done.");
 
@@ -76,7 +77,7 @@ async function importUsers() {
         try {
           const apiUser = await api.fetchUser(user.UserID);
           newUser.Username = apiUser.username;
-          newUser.ApiInfo = JSON.stringify(apiUser);
+          // newUser.ApiInfo = JSON.stringify(apiUser);
         } catch (e) {}
         osuUsers.push(newUser);
 
@@ -216,7 +217,7 @@ async function importRatings() {
   console.log("Importing ratings...");
 
   const bar = new SingleBar({}, Presets.shades_classic);
-  const howMany = await oldClient.beatmaps.count();
+  const howMany = await oldClient.ratings.count();
   bar.start(howMany, 0);
 
   let cursor;
@@ -268,6 +269,64 @@ async function importRatings() {
 
   bar.stop();
   console.log("Imported ratings.");
+}
+
+async function importComments() {
+  console.log("Importing comments...");
+
+  const bar = new SingleBar({}, Presets.shades_classic);
+  const howMany = await oldClient.comments.count();
+  bar.start(howMany, 0);
+
+  let cursor;
+  while (true) {
+    const findOpts: Prisma.commentsFindManyArgs = {
+      take: chunkSize,
+      orderBy: { CommentID: "asc" },
+    };
+    if (cursor) {
+      findOpts.skip = 1;
+      findOpts.cursor = { CommentID: cursor };
+    }
+
+    const chunkOfComments = await oldClient.comments.findMany(findOpts);
+    if (chunkOfComments.length === 0) break;
+
+    const newComments: InsertObject<DB, "Comment">[] = [];
+
+    await Promise.all(
+      chunkOfComments.map(async (oldRating) => {
+        newComments.push({
+          SetID: oldRating.SetID,
+          UserID: oldRating.UserID,
+          Content: oldRating.Comment!,
+          DatePosted: oldRating.date!,
+        });
+      })
+    );
+
+    try {
+      await newClient
+        .insertInto("Comment")
+        .values(newComments)
+        .onDuplicateKeyUpdate((eb) => ({
+          Content: eb.ref("Comment.Content"),
+          DatePosted: eb.ref("Comment.DatePosted"),
+        }))
+        .execute();
+    } catch (e) {
+      console.log();
+      console.error("error", e, JSON.stringify(e));
+      console.log();
+    }
+
+    bar.increment(chunkOfComments.length);
+    const lastComment = chunkOfComments[chunkOfComments.length - 1];
+    cursor = lastComment.CommentID;
+  }
+
+  bar.stop();
+  console.log("Imported comments.");
 }
 
 main();

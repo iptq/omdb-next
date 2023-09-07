@@ -114,7 +114,7 @@ model Comment {
     CommentID  Int      @id @default(autoincrement())
     UserID     Int
     SetID      Int
-    Content    String
+    Content    String   @db.Text
     DatePosted DateTime @default(now())
 
     User       OmdbUser   @relation(fields: [UserID], references: [UserID])
