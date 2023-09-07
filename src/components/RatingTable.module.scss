@@ -1,10 +1,16 @@
 .ratingContainer {
+  --alternate-bg: #203838;
+
+  display: flex;
   background-color: var(--accent-1);
   align-items: center;
+
+  padding: 0.25em;
+  gap: 0.25em;
 }
 
 .setImage {
-  margin-left: 0.5em;
+  flex-basis: min-content;
 }
 
 .diffThumb {

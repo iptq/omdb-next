@@ -83,11 +83,52 @@ export class Api {
     await cache.set(key, user);
     return user;
   }
+
+  async fetchBeatmap(beatmapId: number, opts?: FetchBeatmapOpts) {
+    // See if it's in cache first
+    const key = `/beatmaps/${beatmapId}`;
+    const cacheGet = await cache.get(key);
+    if (cacheGet) return cacheGet;
+
+    const resp = await this.apiFetch(key);
+
+    if (resp.status !== 200) {
+      throw new Error(`Failed to fetch: ${resp.json()}`);
+    }
+
+    const beatmap = await resp.json();
+    await cache.set(key, beatmap);
+    return beatmap;
+  }
+
+  async fetchBeatmapSet(
+    beatmapSetId: number,
+    opts?: FetchBeatmapSetOpts
+  ): Promise<BeatmapSet> {
+    // See if it's in cache first
+    const key = `/beatmapsets/${beatmapSetId}`;
+    const cacheGet = await cache.get(key);
+    if (cacheGet) return cacheGet;
+
+    const resp = await this.apiFetch(key);
+
+    if (resp.status !== 200) {
+      throw new Error(`Failed to fetch: ${resp.json()}`);
+    }
+
+    const beatmapSet = await resp.json();
+    await cache.set(key, beatmapSet);
+    return beatmapSet;
+  }
 }
 
 export interface FetchUserOpts {
   mode?: GameMode;
 }
+
+export interface FetchBeatmapOpts {}
+
+export interface FetchBeatmapSetOpts {}
 
 export interface UserCompact {
   avatar_url: string;
@@ -106,3 +147,13 @@ export interface UserCompact {
 }
 
 export interface User extends UserCompact {}
+
+export interface BeatmapCompact {}
+
+export interface Beatmap extends BeatmapCompact {}
+
+export interface BeatmapSetCompact {
+  beatmaps?: Beatmap[];
+}
+
+export interface BeatmapSet extends BeatmapSetCompact {}

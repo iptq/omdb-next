@@ -13,16 +13,18 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+// * {
+//   box-sizing: border-box;
+//   padding: 0;
+//   margin: 0;
+// }
 
 html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 body {
@@ -44,5 +46,49 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+.flex-container {
+  display: flex;
+  width: 100%;
+}
+
+.alternating-bg:nth-of-type(2n + 1) {
+  background-color: var(--alternate-bg);
+}
+
+@media only screen and (max-width: 1050px) {
+  .content {
+    padding-left: 10%;
+    padding-right: 10%;
+  }
+
+  .topBar {
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+
+  .topBarSearchBar {
+    width: 3.5em;
+  }
+
+  .column-when-mobile-container {
+    flex-direction: column;
+  }
+
+  .column-when-mobile {
+    width: 100% !important;
+  }
+
+  .topBarUsername,
+  .star-rating-list,
+  .starRemoveButton,
+  .star-value {
+    display: none !important;
+  }
+
+  .star-rating-list-mobile {
+    display: initial;
   }
 }

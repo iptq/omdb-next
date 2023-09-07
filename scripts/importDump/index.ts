@@ -34,8 +34,9 @@ async function main() {
 
   api = await Api.new();
 
-  await importUsers();
-  await importBeatmaps();
+  // await importUsers();
+  // await importBeatmaps();
+  await importRatings();
 
   console.log("done.");
 
@@ -118,12 +119,8 @@ async function importUsers() {
   console.log("Imported users.");
 }
 
-// async function insertByChunk(chunkSize: number) {}
-
 async function importBeatmaps() {
   console.log("Importing beatmaps...");
-
-  // console.log("user", await fetchUser(apiKey, 2688103));
 
   const bar = new SingleBar({}, Presets.shades_classic);
   const howMany = await oldClient.beatmaps.count();
@@ -213,6 +210,64 @@ async function importBeatmaps() {
 
   bar.stop();
   console.log("Imported beatmaps.");
+}
+
+async function importRatings() {
+  console.log("Importing ratings...");
+
+  const bar = new SingleBar({}, Presets.shades_classic);
+  const howMany = await oldClient.beatmaps.count();
+  bar.start(howMany, 0);
+
+  let cursor;
+  while (true) {
+    const findOpts: Prisma.ratingsFindManyArgs = {
+      take: chunkSize,
+      orderBy: { BeatmapID: "asc" },
+    };
+    if (cursor) {
+      findOpts.skip = 1;
+      findOpts.cursor = { RatingID: cursor };
+    }
+
+    const chunkOfRatings = await oldClient.ratings.findMany(findOpts);
+    if (chunkOfRatings.length === 0) break;
+
+    const newRatings: InsertObject<DB, "Rating">[] = [];
+
+    await Promise.all(
+      chunkOfRatings.map(async (oldRating) => {
+        newRatings.push({
+          BeatmapID: oldRating.BeatmapID,
+          UserID: oldRating.UserID,
+          Score: oldRating.Score!.toString(),
+          DateRated: oldRating.date,
+        });
+      })
+    );
+
+    try {
+      await newClient
+        .insertInto("Rating")
+        .values(newRatings)
+        .onDuplicateKeyUpdate((eb) => ({
+          Score: eb.ref("Rating.Score"),
+          DateRated: eb.ref("Rating.DateRated"),
+        }))
+        .execute();
+    } catch (e) {
+      console.log();
+      console.error("error", e, JSON.stringify(e));
+      console.log();
+    }
+
+    bar.increment(chunkOfRatings.length);
+    const lastRating = chunkOfRatings[chunkOfRatings.length - 1];
+    cursor = lastRating.RatingID;
+  }
+
+  bar.stop();
+  console.log("Imported ratings.");
 }
 
 main();
