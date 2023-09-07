@@ -20,12 +20,13 @@ import { DB } from "@/db/types";
 import { InsertObject } from "kysely";
 import { Presets, SingleBar } from "cli-progress";
 import { fetchUser, getApiKey } from "./api";
+import { insertOsuUsers } from "./db";
 
 const oldClient = new PrismaClient();
 const newClient = db;
 
 // Probably adjust according to RAM?
-const chunkSize = 5;
+const chunkSize = 100;
 
 async function main() {
   console.log("Importing.");
@@ -60,7 +61,11 @@ async function importUsers() {
     const osuUsers: InsertObject<DB, "OsuUser">[] = [];
     const omdbUsers: InsertObject<DB, "OmdbUser">[] = [];
     for (const user of chunkOfUsers) {
-      osuUsers.push({ UserID: user.UserID, Username: user.Username! });
+      osuUsers.push({
+        UserID: user.UserID,
+        Username: user.Username!,
+        LastFetched: new Date(),
+      });
       const customRatings = {
         "0.0": user.Custom00Rating,
         "0.5": user.Custom05Rating,
@@ -74,19 +79,14 @@ async function importUsers() {
         "4.5": user.Custom45Rating,
         "5.0": user.Custom50Rating,
       };
+
       omdbUsers.push({
         UserID: user.UserID,
         CustomRatings: JSON.stringify(customRatings),
       });
     }
 
-    await newClient
-      .insertInto("OsuUser")
-      .values(osuUsers)
-      .onDuplicateKeyUpdate((eb) => ({
-        Username: eb.ref("OsuUser.Username"),
-      }))
-      .execute();
+    await insertOsuUsers(newClient, osuUsers);
     await newClient
       .insertInto("OmdbUser")
       .values(omdbUsers)
@@ -107,7 +107,7 @@ async function importUsers() {
 async function importBeatmaps(apiKey: string) {
   console.log("Importing beatmaps...");
 
-  console.log("user", await fetchUser(apiKey, { userId: 2688103 }));
+  // console.log("user", await fetchUser(apiKey, 2688103));
 
   const bar = new SingleBar({}, Presets.shades_classic);
   const howMany = await oldClient.beatmaps.count();
@@ -127,18 +127,35 @@ async function importBeatmaps(apiKey: string) {
     const chunkOfBeatmaps = await oldClient.beatmaps.findMany(findOpts);
     if (chunkOfBeatmaps.length === 0) break;
 
-    const newBeatmapSets: InsertObject<DB, "BeatmapSet">[] =
-      chunkOfBeatmaps.map((oldBeatmap) => ({
-        SetID: oldBeatmap.SetID!,
-        HostID: oldBeatmap.SetCreatorID!,
+    const newUsers: InsertObject<DB, "OsuUser">[] = [];
+    const newBeatmapSets: InsertObject<DB, "BeatmapSet">[] = [];
 
-        Genre: oldBeatmap.Genre!,
-        Lang: oldBeatmap.Lang!,
-        Artist: oldBeatmap.Artist!,
-        Title: oldBeatmap.Title!,
-        DateRanked: oldBeatmap.DateRanked!,
-      }));
+    await Promise.all(
+      chunkOfBeatmaps.map(async (oldBeatmap) => {
+        let host: InsertObject<DB, "OsuUser"> = {
+          UserID: oldBeatmap.SetCreatorID!,
+          LastFetched: new Date(),
+        };
+        try {
+          const user = await fetchUser(apiKey, oldBeatmap.SetCreatorID!);
+          host.Username = user.username;
+        } catch (e) {}
+        newUsers.push(host);
 
+        newBeatmapSets.push({
+          SetID: oldBeatmap.SetID!,
+          HostID: oldBeatmap.SetCreatorID!,
+
+          Genre: oldBeatmap.Genre!,
+          Lang: oldBeatmap.Lang!,
+          Artist: oldBeatmap.Artist!,
+          Title: oldBeatmap.Title!,
+          DateRanked: oldBeatmap.DateRanked!,
+        });
+      })
+    );
+
+    await insertOsuUsers(newClient, newUsers);
     const result = await newClient
       .insertInto("BeatmapSet")
       .values(newBeatmapSets)
@@ -147,10 +164,14 @@ async function importBeatmaps(apiKey: string) {
         Genre: eb.ref("BeatmapSet.Genre"),
         Lang: eb.ref("BeatmapSet.Lang"),
         Artist: eb.ref("BeatmapSet.Artist"),
+        Title: eb.ref("BeatmapSet.Title"),
         DateRanked: eb.ref("BeatmapSet.DateRanked"),
       }))
       .execute();
-    console.log("result", result.length);
+
+    bar.increment(newBeatmapSets.length);
+    const lastBeatmap = chunkOfBeatmaps[chunkOfBeatmaps.length - 1];
+    cursor = lastBeatmap.BeatmapID;
   }
 
   console.log("Imported beatmaps.");

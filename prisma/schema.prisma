@@ -235,8 +235,10 @@ model OmdbUser {
 
 model OsuUser {
     UserID   Int     @id
-    Username String  @db.VarChar(255)
+    Username String? @db.VarChar(255)
     Banned   Boolean @default(false)
+
+    LastFetched DateTime
 
     OmdbUser             OmdbUser?
     HostedBeatmapSets    BeatmapSet[]
