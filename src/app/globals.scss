@@ -44,13 +44,14 @@ body {
 
 body {
   position: relative;
+  font-size: 15px;
   // font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: rgb(var(--foreground-rgb));
 }
 
 .container {
-  max-width: 980px;
-  margin: auto;
+  margin-left: 20%;
+  margin-right: 20%;
 }
 
 a {

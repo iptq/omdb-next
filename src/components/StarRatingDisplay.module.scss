@@ -7,6 +7,12 @@
   color: #203838;
 }
 
+:global .alternating-bg:nth-of-type(odd) {
+    :local .starBackground {
+      color: darkslategray;
+    }
+}
+
 .starForeground {
   color: white;
   display: inline-block;
