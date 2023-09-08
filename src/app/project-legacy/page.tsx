@@ -23,7 +23,10 @@ export default async function Page() {
           Most approved nominator edits
           {edits.map((edit, idx) => {
             return (
-              <div className={classNames("alternating-bg", styles.box1)}>
+              <div
+                className={classNames("alternating-bg", styles.box1)}
+                key={edit.UserID}
+              >
                 {idx}
                 <UserProfilePicture userID={1} />
                 {edit.Username} - {edit.count.toString()}
@@ -36,7 +39,10 @@ export default async function Page() {
           Highest charting maps without nominator data
           {mapsWithoutNominatorData.map((row) => {
             return (
-              <div className={classNames("alternating-bg", styles.box2)}>
+              <div
+                className={classNames("alternating-bg", styles.box2)}
+                key={row.BeatmapID}
+              >
                 <a href='/mapset/{$row["SetID"]}'>
                   {row.ChartRank}: {row.Artist} - {row.Title}
                 </a>
@@ -87,7 +93,12 @@ async function getMapsWithoutNominatorData() {
       "Beatmap.SetID",
       "BeatmapSetNominator.SetID"
     )
-    .select(["Beatmap.ChartRank", "BeatmapSet.Artist", "BeatmapSet.Title"])
+    .select([
+      "Beatmap.BeatmapID",
+      "Beatmap.ChartRank",
+      "BeatmapSet.Artist",
+      "BeatmapSet.Title",
+    ])
     .where("BeatmapSetNominator.SetID", "is", null)
     .where("Beatmap.ChartRank", "is not", null)
     .orderBy("Beatmap.ChartRank asc")

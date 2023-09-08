@@ -1,10 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
-  min-height: 100vh;
+  justify-content: flex-start;
 }
 
 .description {
@@ -225,5 +222,16 @@
   }
   to {
     transform: rotate(0deg);
+  }
+}
+
+.ratingCommentContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  height: 420px;
+
+  > .child {
+    flex: 1 1 0;
   }
 }

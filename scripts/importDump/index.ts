@@ -34,10 +34,9 @@ async function main() {
 
   api = await Api.new();
 
-  await importUsers();
+  // await importUsers();
   // await importBeatmaps();
-  // await importRatings();
-  // await importComments();
+  await Promise.all([importRatings(), importComments()]);
 
   console.log("done.");
 
@@ -214,10 +213,9 @@ async function importBeatmaps() {
 }
 
 async function importRatings() {
-  console.log("Importing ratings...");
-
   const bar = new SingleBar({}, Presets.shades_classic);
   const howMany = await oldClient.ratings.count();
+  console.log(`Importing ${howMany} ratings...`);
   bar.start(howMany, 0);
 
   let cursor;
@@ -239,6 +237,7 @@ async function importRatings() {
     await Promise.all(
       chunkOfRatings.map(async (oldRating) => {
         newRatings.push({
+          RatingID: oldRating.RatingID,
           BeatmapID: oldRating.BeatmapID,
           UserID: oldRating.UserID,
           Score: oldRating.Score!.toString(),
@@ -272,10 +271,9 @@ async function importRatings() {
 }
 
 async function importComments() {
-  console.log("Importing comments...");
-
   const bar = new SingleBar({}, Presets.shades_classic);
   const howMany = await oldClient.comments.count();
+  console.log(`Importing ${howMany} comments...`);
   bar.start(howMany, 0);
 
   let cursor;
@@ -297,6 +295,7 @@ async function importComments() {
     await Promise.all(
       chunkOfComments.map(async (oldRating) => {
         newComments.push({
+          CommentID: oldRating.CommentID,
           SetID: oldRating.SetID,
           UserID: oldRating.UserID,
           Content: oldRating.Comment!,

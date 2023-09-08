@@ -1,7 +1,11 @@
 import classNames from "classnames";
-import styles from "./RatingTable.module.scss";
+import styles from "./RatingList.module.scss";
 import StarRatingDisplay from "./StarRatingDisplay";
 import { db } from "@/db";
+
+export interface RatingListProps {
+  className?: string;
+}
 
 export async function getData() {
   const ratings = await db
@@ -17,29 +21,26 @@ export async function getData() {
     .orderBy("Rating.DateRated desc")
     .limit(20)
     .execute();
-  const comments = await db
-    .selectFrom("Comment")
-    .selectAll()
-    .limit(20)
-    .execute();
 
-  return { ratings, comments };
+  return { ratings };
 }
 
-export default async function RatingTable() {
+export default async function RatingList({ className }: RatingListProps) {
   const { ratings } = await getData();
 
   return (
-    <div className="flex-child column-when-mobile">
+    <div className={classNames("scroll-y", className)}>
       {ratings.map((rating) => {
         return (
-          <div className={classNames(styles.ratingContainer, "alternating-bg")}>
+          <div
+            className={classNames(styles.ratingContainer, "alternating-bg")}
+            key={rating.RatingID}
+          >
             <div className={styles.setImage}>
               <a href={`/mapset/${rating.SetID}`}>
                 <img
                   src={`https://b.ppy.sh/thumb/${rating.SetID}l.jpg`}
                   className={styles.diffThumb}
-                  //   onerror="this.onerror=null; this.src='/charts/INF.png';"
                 />
               </a>
             </div>

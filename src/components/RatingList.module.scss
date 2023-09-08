@@ -1,8 +1,8 @@
 .ratingContainer {
   --alternate-bg: #203838;
+  background-color: var(--accent-1);
 
   display: flex;
-  background-color: var(--accent-1);
   align-items: center;
 
   padding: 0.25em;

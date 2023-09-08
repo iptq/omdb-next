@@ -13,14 +13,14 @@ export default function StarRatingDisplay({ rating }: StarRatingDisplayProps) {
     .filter((x) => x < rating)
     .map((x) => {
       if (rating - 0.5 === x)
-        return <FontAwesomeIcon icon={faStarHalf} color="white" fixedWidth />;
-      else return <FontAwesomeIcon icon={faStar} color="white" fixedWidth />;
+        return <FontAwesomeIcon icon={faStarHalf} color="white" size="sm" />;
+      else return <FontAwesomeIcon icon={faStar} color="white" size="sm" />;
     });
 
   const backgroundStars = (
     <div className={styles.starBackground}>
-      {numbers.map((_) => (
-        <FontAwesomeIcon icon={faStar} color="black" fixedWidth />
+      {numbers.map((_, i) => (
+        <FontAwesomeIcon key={i} icon={faStar} color="black" size="sm" />
       ))}
     </div>
   );

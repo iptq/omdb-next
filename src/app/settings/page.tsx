@@ -52,6 +52,7 @@ export default async function Page() {
               </select>
               <br />
               <span className="subText">
+                {/* eslint-disable-next-line react/no-unescaped-entities */}
                 "Prioritise Played" only works if you have osu! supporter.
               </span>
             </td>
@@ -116,8 +117,8 @@ export default async function Page() {
       </a>
       <br />
       <span className="subText">
-        Please keep your API key secure - if it leaks then it's as bad as having
-        your PASSWORD leaked.
+        Please keep your API key secure - if it leaks then it&quot;s as bad as
+        having your PASSWORD leaked.
         <br /> Click your application name to REVEAL your API key.
       </span>
       <br />
@@ -127,7 +128,7 @@ export default async function Page() {
         return (
           <details>
             <summary>
-              {apiKey}{" "}
+              {apiKey}
               <a href='RemoveApiApp.php?id={$row["ApiID"]}'>
                 <i className="icon-remove"></i>
               </a>

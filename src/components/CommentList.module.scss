@@ -1,0 +1,17 @@
+.commentContainer {
+  --alternate-bg: #203838;
+  background-color: var(--accent-1);
+}
+
+.comment {
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.commentContent {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

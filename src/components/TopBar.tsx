@@ -4,6 +4,7 @@ import SearchBar from "./SearchBar";
 import styles from "./TopBar.module.scss";
 import classNames from "classnames";
 import { GearIcon } from "@radix-ui/react-icons";
+import UserProfilePicture from "./UserProfilePicture";
 
 export default function TopBar() {
   return (
@@ -58,13 +59,7 @@ export default function TopBar() {
           <a href="/settings/">
             <GearIcon />
           </a>
-          <a href="/profile/2688103" style={{ color: "white" }}>
-            <img
-              src="https://s.ppy.sh/a/2688103"
-              style={{ height: "2rem", verticalAlign: "middle" }}
-            />
-            ​
-          </a>
+          <UserProfilePicture userID={2688103} username="IOException" />
           <a className={styles.username} href="/profile/2688103">
             <b>IOException</b>
           </a>
