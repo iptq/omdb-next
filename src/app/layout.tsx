@@ -9,7 +9,10 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "OMDB",
+  title: {
+    default: "OMDB",
+    template: "%s | OMDB",
+  },
   description: "",
 };
 
