@@ -1,5 +1,7 @@
 import { db } from "@/db";
+import classNames from "classnames";
 import { Metadata } from "next";
+import styles from "../page.module.css";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -40,7 +42,7 @@ export default async function Page() {
   }
 
   return (
-    <>
+    <main className={classNames(styles.main, "container")}>
       <h1>Settings</h1>
       <hr />
       <form action={create}>
@@ -179,6 +181,6 @@ export default async function Page() {
           </tr>
         </table>
       </form>
-    </>
+    </main>
   );
 }
