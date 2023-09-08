@@ -3,6 +3,11 @@ import styles from "./page.module.css";
 import RatingList from "@/components/RatingList";
 import { db } from "@/db";
 import classNames from "classnames";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 async function getData() {
   const result = await db

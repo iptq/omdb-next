@@ -23,18 +23,18 @@
   }
 
   .username {
-    color: white;
+    color: var(--text-color);
   }
 }
 
 .leftHalf .link {
   padding: 12px;
-  color: white;
+  color: var(--text-color);
 }
 
 .homeLink {
   margin-right: 8px;
-  color: white;
+  color: var(--text-color);
 }
 
 .topBarDropDown {
