@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export interface UserProfilePictureProps {
   userID: number;
   username?: string | null;
@@ -15,13 +17,13 @@ export default function UserProfilePicture({
   const picSize = size ?? "2em";
 
   return (
-    <a href={`/profile/${userID}`}>
+    <Link href={`/profile/${userID}`}>
       <img
         src={`https://s.ppy.sh/a/${userID}`}
         alt={description}
         title={description}
         style={{ width: picSize, height: picSize }}
       />
-    </a>
+    </Link>
   );
 }

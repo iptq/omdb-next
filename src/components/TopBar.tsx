@@ -5,22 +5,23 @@ import styles from "./TopBar.module.scss";
 import classNames from "classnames";
 import { GearIcon } from "@radix-ui/react-icons";
 import UserProfilePicture from "./UserProfilePicture";
+import Link from "next/link";
 
 export default function TopBar() {
   return (
     <div className={styles.topBar}>
       <div className={classNames("container", styles.container)}>
         <div className={styles.leftHalf}>
-          <a href="/" className={styles.homeLink}>
+          <Link href="/" className={styles.homeLink}>
             OMDB
-          </a>
+          </Link>
 
-          <a href="/" className={styles.link}>
+          <Link href="/" className={styles.link}>
             <div className="topBarLink">home</div>
-          </a>
-          <a href="/charts/" className={styles.link}>
+          </Link>
+          <Link href="/charts/" className={styles.link} passHref>
             <div className="topBarLink">charts</div>
-          </a>
+          </Link>
 
           <div className={classNames(styles.topBarDropDown, styles.link)}>
             <div className="topBarLink topBarDropDownButton">maps</div>
@@ -36,7 +37,7 @@ export default function TopBar() {
         <div className={styles.spacer} />
 
         <div className={styles.rightHalf}>
-          <div className={styles.topBarDropDown}>
+          <div className={(styles.topBarDropDown, styles.link)}>
             <div className="topBarLink topBarDropDownButton">osu! </div>
             <div className={styles.dropdownContent}>
               <a id="osuLink" href="">
@@ -53,12 +54,12 @@ export default function TopBar() {
               </a>
             </div>
           </div>
-          <a href="/dashboard/">
+          <Link href="/dashboard/" className={styles.link}>
             <div className="topBarLink">dashboard</div>
-          </a>
-          <a href="/settings/">
+          </Link>
+          <Link href="/settings/" className={styles.link}>
             <GearIcon />
-          </a>
+          </Link>
           <UserProfilePicture userID={2688103} username="IOException" />
           <a className={styles.username} href="/profile/2688103">
             <b>IOException</b>

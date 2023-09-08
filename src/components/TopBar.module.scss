@@ -27,7 +27,8 @@
   }
 }
 
-.leftHalf .link {
+.leftHalf .link,
+.rightHalf .link {
   padding: 12px;
   color: var(--text-color);
 }
@@ -40,7 +41,7 @@
 .topBarDropDown {
   display: inline-block;
   margin: 0px;
-  padding: 0px;
+  // padding: 0px;
 
   .dropdownContent {
     display: none;
