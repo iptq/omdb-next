@@ -1,3 +1,4 @@
+import { db } from "@/db";
 import { Metadata } from "next";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -10,10 +11,20 @@ const settingsSchema = z.object({});
 
 const ratings = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
+async function getData() {
+  const apiKeys = await db
+    .selectFrom("ApiKey")
+    .selectAll()
+    .where("ApiKey.UserID", "=", 2688103)
+    .execute();
+
+  return { apiKeys };
+}
+
 export default async function Page() {
+  const { apiKeys } = await getData();
   const doTrueRandom = true;
   const hideRatings = true;
-  const apiKeys = [];
 
   async function create(formData: FormData) {
     "use server";
@@ -126,14 +137,14 @@ export default async function Page() {
 
       {apiKeys.map((apiKey) => {
         return (
-          <details>
+          <details key={apiKey.ApiKey}>
             <summary>
-              {apiKey}
+              {apiKey.ApiKey}
               <a href='RemoveApiApp.php?id={$row["ApiID"]}'>
                 <i className="icon-remove"></i>
               </a>
             </summary>
-            <span className="subText">{apiKey}</span>
+            <span className="subText">{apiKey.ApiKey}</span>
           </details>
         );
       })}

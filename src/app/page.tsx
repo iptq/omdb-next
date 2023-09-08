@@ -34,7 +34,7 @@ export default async function Home() {
   return (
     <main className={classNames(styles.main, "container")}>
       welcome to OMDB - a place to rate maps! discover new maps, check out
-      people's ratings, AND STUFF. <br />
+      people&quot;s ratings, AND STUFF. <br />
       <span>
         {userCount} users,
         {ratingCount} ratings,

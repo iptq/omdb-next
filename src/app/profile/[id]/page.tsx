@@ -1,6 +1,10 @@
 import { db } from "@/db";
 
-export async function generateMetadata({ params }) {
+interface Props {
+  params: { id: string };
+}
+
+export async function generateMetadata({ params }: Props) {
   const { id } = params;
   const user = await getUser(parseInt(id));
   return {
@@ -8,7 +12,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function Page({ params }) {
+export default async function Page({ params }: Props) {
   const { id } = params;
   const user = await getUser(parseInt(id));
   return <div>Hellosu {JSON.stringify(user?.Username)}</div>;

@@ -27,14 +27,14 @@ export default function SearchBar() {
           callback([
             {
               label: "Users",
-              options: result.users.map((user) => ({
+              options: result.users.map((user: any) => ({
                 value: user.UserID,
                 label: user.Username,
               })),
             },
             {
               label: "Maps",
-              options: result.maps.map((map) => ({
+              options: result.maps.map((map: any) => ({
                 value: map.SetID,
                 label: `${map.Artist} - ${map.Title}`,
               })),
