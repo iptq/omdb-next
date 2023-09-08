@@ -25,14 +25,14 @@ async function getData() {
     ])
     .executeTakeFirst();
 
-  return result;
+  return result!;
 }
 
 export default async function Home() {
   const { userCount, ratingCount, commentCount } = await getData();
 
   return (
-    <main className={styles.main}>
+    <main className={classNames(styles.main, "container")}>
       welcome to OMDB - a place to rate maps! discover new maps, check out
       people's ratings, AND STUFF. <br />
       <span>

@@ -20,7 +20,7 @@ const dialect = new MysqlDialect({
 export const db = new Kysely<DB>({
   dialect,
   log: (event) => {
-    if (event.level === "error") {
+    if (event.level === "query") {
       console.log(event.query.sql);
       console.log(event.query.parameters);
     }
