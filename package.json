@@ -44,6 +44,7 @@
     "dotenv": "^16.3.1",
     "file-system-cache": "^2.4.4",
     "limiter": "^2.1.0",
+    "pnpm": "^8.7.4",
     "prettier": "^3.0.2",
     "prisma-kysely": "^1.7.0",
     "regenerator-runtime": "^0.14.0",
