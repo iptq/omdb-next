@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
 import styles from "./StarRatingDisplay.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons";

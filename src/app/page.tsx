@@ -7,8 +7,9 @@ import { Metadata } from "next";
 import { sql } from "kysely";
 
 export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-  title: "Home",
+  title: "Home | OMDB",
 };
 
 interface Data {
