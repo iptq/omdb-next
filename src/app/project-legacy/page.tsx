@@ -3,6 +3,8 @@ import styles from "./page.module.scss";
 import { db } from "@/db";
 import classNames from "classnames";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
   const { setsLeft, edits, mapsWithoutNominatorData } = await getData();
 

@@ -20,3 +20,6 @@ services:
       - MYSQL_DATABASE=omdb
     volumes:
       - ./docker-data/mysql-old:/var/lib/mysql
+
+  app:
+    build: .

@@ -1,0 +1,7 @@
+node_modules
+data*.sql
+api-cache
+docker-data
+.next
+generated
+.git

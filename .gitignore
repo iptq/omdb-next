@@ -36,6 +36,5 @@ next-env.d.ts
 
 dev.db
 docker-data
-
 /data*.sql
 api-cache
