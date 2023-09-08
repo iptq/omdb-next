@@ -19,7 +19,7 @@ import { PrismaClient, Prisma } from "../../old-db/generated/prisma-client-js";
 import { DB } from "@/db/types";
 import { InsertObject } from "kysely";
 import { Presets, SingleBar } from "cli-progress";
-import { Api } from "./api";
+import { Api } from "../../src/osuapi";
 import { insertOsuUsers } from "./db";
 
 const oldClient = new PrismaClient();
