@@ -38,3 +38,4 @@ dev.db
 docker-data
 /data*.sql
 api-cache
+.env

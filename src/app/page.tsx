@@ -4,29 +4,28 @@ import RatingList from "@/components/RatingList";
 import { db } from "@/db";
 import classNames from "classnames";
 import { Metadata } from "next";
+import { sql } from "kysely";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Home",
 };
 
-async function getData() {
-  const result = await db
-    .selectFrom("OmdbUser")
-    .select(({ selectFrom }) => [
-      selectFrom("OmdbUser")
-        .select(({ fn }) => fn.countAll<number>().as("userCount"))
-        .as("userCount"),
-      selectFrom("Rating")
-        .select(({ fn }) => fn.countAll<number>().as("ratingCount"))
-        .as("ratingCount"),
-      selectFrom("Comment")
-        .select(({ fn }) => fn.countAll<number>().as("commentCount"))
-        .as("commentCount"),
-    ])
-    .executeTakeFirst();
+interface Data {
+  userCount: number;
+  ratingCount: number;
+  commentCount: number;
+}
 
-  return result!;
+async function getData(): Promise<Data> {
+  const result = await sql<Data>`
+    select
+      (select count(*) from OmdbUser) as userCount,
+      (select count(*) from Rating) as ratingCount,
+      (select count(*) from Comment) as commentCount
+  `.execute(db);
+
+  return result.rows[0];
 }
 
 export default async function Home() {
