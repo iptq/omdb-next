@@ -46,7 +46,7 @@ export default function SearchBar() {
           ]);
         });
     },
-    500
+    500,
   );
 
   const loadOptions = (inputValue: string, callback: (_: Options) => void) => {

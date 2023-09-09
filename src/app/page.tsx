@@ -34,7 +34,8 @@ export default async function Home() {
 
   return (
     <main className={classNames(styles.main, "content")}>
-      welcome to OMDB - a place to rate maps! discover new maps, check out people&quot;s ratings, AND STUFF. <br />
+      welcome to OMDB - a place to rate maps! discover new maps, check out
+      people&quot;s ratings, AND STUFF. <br />
       <span>
         {userCount} users, {ratingCount} ratings, {commentCount} comments
       </span>
@@ -43,7 +44,7 @@ export default async function Home() {
         className={classNames(
           "flex-container",
           "column-when-mobile-container",
-          styles.ratingCommentContainer
+          styles.ratingCommentContainer,
         )}
       >
         <RatingList className={styles.child} />

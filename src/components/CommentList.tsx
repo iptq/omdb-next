@@ -36,16 +36,16 @@ export default async function CommentList({ className }: CommentListProps) {
           <div
             className={classNames(
               "flex-container alternating-bg",
-              styles.comment
+              styles.comment,
             )}
             key={comment.CommentID}
           >
             <BeatmapsetThumbnail setID={comment.SetID} />
             <a href={`/profile/${comment.UserID}`}>
-            <UserProfilePicture
+              <UserProfilePicture
                 userID={comment.UserID}
                 username={comment.Username}
-            />
+              />
             </a>
             <div className="flex-child">
               <a href={`/profile/${comment.UserID}`}>{comment.Username}</a>
@@ -55,7 +55,6 @@ export default async function CommentList({ className }: CommentListProps) {
                 </a>
               </div>
             </div>
-
           </div>
         );
       })}

@@ -40,15 +40,15 @@ export default async function RatingList({ className }: RatingListProps) {
           >
             <BeatmapsetThumbnail setID={rating.SetID} />
             <a href={`/profile/${rating.UserID}`}>
-            <UserProfilePicture
+              <UserProfilePicture
                 userID={rating.UserID}
                 username={rating.Username}
-            />
+              />
             </a>
             <div className="flex-child">
               <a href={`/profile/${rating.UserID}`}>{rating.Username}</a>
               <div>
-                <StarRatingDisplay rating={parseFloat(rating.Score)} /> on {" "}
+                <StarRatingDisplay rating={parseFloat(rating.Score)} /> on{" "}
                 <a href={`/mapset/${rating.SetID}`}>{rating.DifficultyName}</a>
               </div>
             </div>

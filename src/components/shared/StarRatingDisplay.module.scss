@@ -8,9 +8,9 @@
 }
 
 :global .alternating-bg:nth-of-type(odd) {
-    :local .starBackground {
-      color: darkslategray;
-    }
+  :local .starBackground {
+    color: darkslategray;
+  }
 }
 
 .starForeground {

@@ -90,7 +90,7 @@ async function getMapsWithoutNominatorData() {
     .leftJoin(
       "BeatmapSetNominator",
       "Beatmap.SetID",
-      "BeatmapSetNominator.SetID"
+      "BeatmapSetNominator.SetID",
     )
     .select([
       "Beatmap.BeatmapID",
@@ -111,10 +111,10 @@ async function getSetsLeft() {
     .leftJoin(
       "BeatmapSetNominator",
       "Beatmap.SetID",
-      "BeatmapSetNominator.SetID"
+      "BeatmapSetNominator.SetID",
     )
     .select(({ fn }) =>
-      fn.agg<number>("count", ["Beatmap.SetID"]).distinct().as("count")
+      fn.agg<number>("count", ["Beatmap.SetID"]).distinct().as("count"),
     )
     .where("BeatmapSetNominator.SetID", "is", null)
     .executeTakeFirst();

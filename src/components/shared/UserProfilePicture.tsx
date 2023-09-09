@@ -12,7 +12,9 @@ export default function UserProfilePicture({
   username,
   size,
 }: UserProfilePictureProps) {
-  const description = username ? `${username}'s profile picture` : "Profile picture";
+  const description = username
+    ? `${username}'s profile picture`
+    : "Profile picture";
 
   return (
     <Link href={`/profile/${userID}`}>

@@ -103,7 +103,7 @@ export class Api {
 
   async fetchBeatmapSet(
     beatmapSetId: number,
-    opts?: FetchBeatmapSetOpts
+    opts?: FetchBeatmapSetOpts,
   ): Promise<BeatmapSet> {
     // See if it's in cache first
     const key = `/beatmapsets/${beatmapSetId}`;
