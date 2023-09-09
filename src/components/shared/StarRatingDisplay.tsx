@@ -85,9 +85,7 @@ export default function StarRatingDisplay({
   return (
     <div className={styles.starRatingDisplay}>
       {backgroundStars}
-      <div className={styles.starForeground} style={{ pointerEvents: "none" }}>
-        {foregroundStars}
-      </div>
+      <div className={styles.starForeground}>{foregroundStars}</div>
     </div>
   );
 }
