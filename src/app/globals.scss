@@ -11,6 +11,7 @@
     --accent-2: #203838;
     --text-color: white;
     --background-color: black;
+    --link-color: #6fffea;
   }
 }
 
@@ -20,6 +21,7 @@
     --accent-2: #aed1d1;
     --text-color: black;
     --background-color: white;
+    --link-color: #003b32;
   }
 }
 
@@ -54,7 +56,7 @@ body {
 }
 
 a {
-  color: #6fffea;
+  color: var(--link-color);
   text-decoration: none;
 }
 
