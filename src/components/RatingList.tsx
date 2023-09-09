@@ -48,7 +48,7 @@ export default async function RatingList({ className }: RatingListProps) {
             <div className="flex-child">
               <a href={`/profile/${rating.UserID}`}>{rating.Username}</a>
               <div>
-                <StarRatingDisplay rating={parseFloat(rating.Score)} /> on
+                <StarRatingDisplay rating={parseFloat(rating.Score)} /> on {" "}
                 <a href={`/mapset/${rating.SetID}`}>{rating.DifficultyName}</a>
               </div>
             </div>
