@@ -7,6 +7,7 @@ import { GearIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import UserProfilePicture from "../shared/UserProfilePicture";
 import RulesetIcon from "../shared/Icons/RulesetIcon";
+import TopBarUser from "./TopBarUser";
 
 export default function TopBar() {
   return (
@@ -63,10 +64,7 @@ export default function TopBar() {
           <Link href="/settings/" className={styles.link}>
             <GearIcon />
           </Link>
-          <UserProfilePicture userID={2688103} username="IOException" />
-          <a className={styles.username} href="/profile/2688103">
-            <b>IOException</b>
-          </a>
+          <TopBarUser />
         </div>
       </div>
     </div>

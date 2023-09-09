@@ -19,7 +19,7 @@ export class Api {
   private static baseUrl = "https://osu.ppy.sh/api/v2";
   private counter: RateLimiter;
 
-  private constructor(private apiKey: string) {
+  constructor(private apiKey: string) {
     this.counter = new RateLimiter({
       tokensPerInterval: 1000,
       interval: "min",
@@ -33,6 +33,7 @@ export class Api {
       grant_type: "client_credentials",
       scope: "public",
     });
+
     const resp = await fetch("https://osu.ppy.sh/oauth/token", {
       method: "POST",
       headers: {
@@ -40,9 +41,10 @@ export class Api {
       },
       body,
     });
+
     const result = await resp.json();
     console.log("Got api token.", result);
-    return result["access_token"];
+    return new Api(result["access_token"]);
   }
 
   async apiFetch(info: RequestInfo, init?: RequestInit): Promise<any> {
@@ -64,7 +66,18 @@ export class Api {
         Authorization: `Bearer ${this.apiKey}`,
       },
     };
-    await fetch(newInfo, newInit);
+    const resp = await fetch(newInfo, newInit);
+    if (resp.status !== 200) {
+      const body = await resp.json();
+      throw new Error(`Failed to fetch: ${resp.status} ${JSON.stringify(body)}`);
+    }
+    return resp;
+  }
+
+  async fetchMe(opts?: FetchUserOpts): Promise<User> {
+    const resp = await this.apiFetch(`/me`);
+    const user = await resp.json();
+    return user;
   }
 
   async fetchUser(userId: number, opts?: FetchUserOpts): Promise<User> {
@@ -74,10 +87,6 @@ export class Api {
     if (cacheGet) return cacheGet;
 
     const resp = await this.apiFetch(`/users/${userId}?key=id`);
-
-    if (resp.status !== 200) {
-      throw new Error(`Failed to fetch: ${resp.json()}`);
-    }
 
     const user = await resp.json();
     await cache.set(key, user);
@@ -92,29 +101,18 @@ export class Api {
 
     const resp = await this.apiFetch(key);
 
-    if (resp.status !== 200) {
-      throw new Error(`Failed to fetch: ${resp.json()}`);
-    }
-
     const beatmap = await resp.json();
     await cache.set(key, beatmap);
     return beatmap;
   }
 
-  async fetchBeatmapSet(
-    beatmapSetId: number,
-    opts?: FetchBeatmapSetOpts,
-  ): Promise<BeatmapSet> {
+  async fetchBeatmapSet(beatmapSetId: number, opts?: FetchBeatmapSetOpts): Promise<BeatmapSet> {
     // See if it's in cache first
     const key = `/beatmapsets/${beatmapSetId}`;
     const cacheGet = await cache.get(key);
     if (cacheGet) return cacheGet;
 
     const resp = await this.apiFetch(key);
-
-    if (resp.status !== 200) {
-      throw new Error(`Failed to fetch: ${resp.json()}`);
-    }
 
     const beatmapSet = await resp.json();
     await cache.set(key, beatmapSet);

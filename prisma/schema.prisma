@@ -98,7 +98,6 @@ model BeatmapSet {
     @@fulltext([Title, Artist])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model BeatmapSetNominator {
     SetID       Int
     NominatorID Int
@@ -176,14 +175,12 @@ model Rating {
     User    OmdbUser @relation(fields: [UserID], references: [UserID])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model SetRetrieveInfo {
     Id            Int      @id
     LastRetrieval DateTime
     LastDate      DateTime
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model UserCorrelation {
     User1ID Int
     User2ID Int
@@ -197,7 +194,6 @@ model UserCorrelation {
     @@unique([User1ID, User2ID])
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model UserRelation {
     UserIDFrom Int?
     UserIDTo   Int?
@@ -210,8 +206,8 @@ model UserRelation {
 model OmdbUser {
     UserID Int @id
 
-    AccessToken  String?
-    RefreshToken String?
+    AccessToken  String? @db.Text
+    RefreshToken String? @db.Text
 
     Weight           Decimal? @db.Decimal(6, 4)
     DoTrueRandom     Boolean  @default(false)
