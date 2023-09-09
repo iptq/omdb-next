@@ -42,7 +42,7 @@ export default async function Page() {
   }
 
   return (
-    <main className={classNames(styles.main, "container")}>
+    <main className={classNames(styles.main, "content")}>
       <h1>Settings</h1>
       <hr />
       <form action={create}>

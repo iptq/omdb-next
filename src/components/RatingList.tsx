@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import styles from "./RatingList.module.scss";
-import StarRatingDisplay from "./StarRatingDisplay";
+import StarRatingDisplay from "./shared/StarRatingDisplay";
 import { db } from "@/db";
+import BeatmapsetThumbnail from "./shared/BeatmapsetThumbnail";
+import UserProfilePicture from "./shared/UserProfilePicture";
 
 export interface RatingListProps {
   className?: string;
@@ -36,24 +38,13 @@ export default async function RatingList({ className }: RatingListProps) {
             className={classNames(styles.ratingContainer, "alternating-bg")}
             key={rating.RatingID}
           >
-            <div className={styles.setImage}>
-              <a href={`/mapset/${rating.SetID}`}>
-                <img
-                  src={`https://b.ppy.sh/thumb/${rating.SetID}l.jpg`}
-                  className={styles.diffThumb}
-                />
-              </a>
-            </div>
-            <div>
-              <a href={`/profile/${rating.UserID}`}>
-                <img
-                  src={`https://s.ppy.sh/a/${rating.UserID}`}
-                  className={styles.profilePicture}
-                  title="<?php echo GetUserNameFromId($row['UserID'], $conn); ?>"
-                />
-              </a>
-            </div>
-
+            <BeatmapsetThumbnail setID={rating.SetID} />
+            <a href={`/profile/${rating.UserID}`}>
+            <UserProfilePicture
+                userID={rating.UserID}
+                username={rating.Username}
+            />
+            </a>
             <div className="flex-child">
               <a href={`/profile/${rating.UserID}`}>{rating.Username}</a>
               <div>

@@ -1,4 +1,4 @@
-import UserProfilePicture from "@/components/UserProfilePicture";
+import UserProfilePicture from "@/components/shared/UserProfilePicture";
 import styles from "./page.module.scss";
 import { db } from "@/db";
 import classNames from "classnames";
@@ -9,7 +9,7 @@ export default async function Page() {
   const { setsLeft, edits, mapsWithoutNominatorData } = await getData();
 
   return (
-    <div className={classNames("container")}>
+    <div className={classNames("content")}>
       <div className={classNames(styles.body)}>
         <h2>{setsLeft} sets left.</h2>
         There are {setsLeft} sets from modding v1 that have missing nominator

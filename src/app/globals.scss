@@ -49,13 +49,13 @@ body {
   color: rgb(var(--foreground-rgb));
 }
 
-.container {
+.content {
   margin-left: 20%;
   margin-right: 20%;
 }
 
 a {
-  color: inherit;
+  color: #6fffea;
   text-decoration: none;
 }
 
@@ -63,6 +63,11 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.topBar {
+  padding-left: 20%;
+  padding-right: 20%;
 }
 
 .flex-container {
@@ -76,21 +81,21 @@ a {
 
 @media only screen and (max-width: 1050px) {
   .content {
-    padding-left: 10%;
-    padding-right: 10%;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
   }
 
   .topBar {
-    padding-left: 2%;
-    padding-right: 2%;
+    padding-left: 0%;
+    padding-right: 0%;
   }
 
   .topBarSearchBar {
-    width: 3.5em;
+    width: 3.5em !important;
   }
 
   .column-when-mobile-container {
-    flex-direction: column;
+    flex-direction: column !important;
   }
 
   .column-when-mobile {

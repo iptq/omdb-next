@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export interface UserProfilePictureProps {
   userID: number;
@@ -11,18 +12,16 @@ export default function UserProfilePicture({
   username,
   size,
 }: UserProfilePictureProps) {
-  const description = username
-    ? `${username}'s profile picture`
-    : "Profile picture";
-  const picSize = size ?? "2em";
+  const description = username ? `${username}'s profile picture` : "Profile picture";
 
   return (
     <Link href={`/profile/${userID}`}>
-      <img
+      <Image
         src={`https://s.ppy.sh/a/${userID}`}
+        width={24}
+        height={24}
         alt={description}
         title={description}
-        style={{ width: picSize, height: picSize }}
       />
     </Link>
   );

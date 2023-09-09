@@ -4,8 +4,8 @@ import SearchBar from "./SearchBar";
 import styles from "./TopBar.module.scss";
 import classNames from "classnames";
 import { GearIcon } from "@radix-ui/react-icons";
-import UserProfilePicture from "./UserProfilePicture";
 import Link from "next/link";
+import UserProfilePicture from "./shared/UserProfilePicture";
 
 export default function TopBar() {
   return (
@@ -40,16 +40,16 @@ export default function TopBar() {
           <div className={(styles.topBarDropDown, styles.link)}>
             <div className="topBarLink topBarDropDownButton">osu! </div>
             <div className={styles.dropdownContent}>
-              <a id="osuLink" href="">
+              <a id="osuLink" href="#">
                 osu!
               </a>
-              <a id="taikoLink" href="">
+              <a id="taikoLink" href="#">
                 osu!taiko
               </a>
-              <a id="catchLink" href="">
+              <a id="catchLink" href="#">
                 osu!catch
               </a>
-              <a id="maniaLink" href="">
+              <a id="maniaLink" href="#">
                 osu!mania
               </a>
             </div>

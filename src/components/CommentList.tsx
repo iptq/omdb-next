@@ -1,7 +1,8 @@
 import { db } from "@/db";
-import UserProfilePicture from "./UserProfilePicture";
+import UserProfilePicture from "./shared/UserProfilePicture";
 import classNames from "classnames";
 import styles from "./CommentList.module.scss";
+import BeatmapsetThumbnail from "./shared/BeatmapsetThumbnail";
 
 export interface CommentListProps {
   className?: string;
@@ -39,29 +40,22 @@ export default async function CommentList({ className }: CommentListProps) {
             )}
             key={comment.CommentID}
           >
-            <div>
-              <a href={`/mapset/${comment.SetID}`}>
-                <img
-                  src={`https://b.ppy.sh/thumb/${comment.SetID}l.jpg`}
-                  className="diffThumb"
-                  style={{ width: "32px", height: "32px" }}
-                />
-              </a>
-            </div>
-
-            <div>
-              <div>
-                <UserProfilePicture
-                  userID={comment.UserID}
-                  username={comment.Username}
-                />
-              </div>
+            <BeatmapsetThumbnail setID={comment.SetID} />
+            <a href={`/profile/${comment.UserID}`}>
+            <UserProfilePicture
+                userID={comment.UserID}
+                username={comment.Username}
+            />
+            </a>
+            <div className="flex-child">
+              <a href={`/profile/${comment.UserID}`}>{comment.Username}</a>
               <div className={styles.commentContent}>
                 <a href={`/mapset/${comment.SetID}`}>
                   {isBlocked ? "[blocked comment]" : comment.Content}
                 </a>
               </div>
             </div>
+
           </div>
         );
       })}

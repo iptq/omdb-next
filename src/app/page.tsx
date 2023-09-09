@@ -33,13 +33,10 @@ export default async function Home() {
   const { userCount, ratingCount, commentCount } = await getData();
 
   return (
-    <main className={classNames(styles.main, "container")}>
-      welcome to OMDB - a place to rate maps! discover new maps, check out
-      people&quot;s ratings, AND STUFF. <br />
+    <main className={classNames(styles.main, "content")}>
+      welcome to OMDB - a place to rate maps! discover new maps, check out people&quot;s ratings, AND STUFF. <br />
       <span>
-        {userCount} users,
-        {ratingCount} ratings,
-        {commentCount} comments
+        {userCount} users, {ratingCount} ratings, {commentCount} comments
       </span>
       <hr />
       <div
