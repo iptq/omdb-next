@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 
-async function fetcher(url) {
+async function fetcher(url: RequestInfo | URL) {
   const resp = await fetch(url);
   return await resp.json();
 }
@@ -29,7 +29,7 @@ export default function TopBarUser() {
       <>
         <UserProfilePicture userID={data.UserID} username={data.Username} />
         <Link href={`/profile/${data.UserID}`}>
-          <b>IOException</b>
+          <b>{data.Username}</b>
         </Link>
         <button onClick={logout}>Logout</button>
       </>
