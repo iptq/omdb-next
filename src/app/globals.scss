@@ -58,6 +58,10 @@ body {
 a {
   color: var(--link-color);
   text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -87,6 +91,13 @@ a {
 
 .pointer {
   cursor: pointer;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 12px;
 }
 
 @media only screen and (max-width: 1050px) {
