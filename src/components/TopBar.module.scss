@@ -33,6 +33,7 @@
 .rightHalf .link {
   padding: 12px;
   color: var(--text-color);
+  background-color: var(--accent-2);
 }
 
 .homeLink {
@@ -43,6 +44,7 @@
 .topBarDropDown {
   display: inline-block;
   margin: 0px;
+  cursor: pointer;
   // padding: 0px;
 
   .dropdownContent {

@@ -79,6 +79,11 @@ a {
   background-color: var(--alternate-bg);
 }
 
+.subText {
+  font-size: 11px;
+  color: #a8a8a8;
+}
+
 @media only screen and (max-width: 1050px) {
   .content {
     margin-left: 5% !important;

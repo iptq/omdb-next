@@ -1,0 +1,24 @@
+.rulesetIcon {
+    filter: invert(100%);
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+
+    &.osu {
+        background-image: url("~src/assets/icon-osu.svg");
+    }
+
+    &.taiko {
+        background-image: url("~src/assets/icon-taiko.svg");
+    }
+
+    &.catch {
+        background-image: url("~src/assets/icon-catch.svg");
+    }
+
+    &.mania {
+        background-image: url("~src/assets/icon-mania.svg");
+    }
+}

@@ -9,12 +9,12 @@ export default async function Page() {
   const { setsLeft, edits, mapsWithoutNominatorData } = await getData();
 
   return (
-    <div className={classNames("content")}>
+    <div className={classNames(styles.main, "content")}>
       <div className={classNames(styles.body)}>
         <h2>{setsLeft} sets left.</h2>
         There are {setsLeft} sets from modding v1 that have missing nominator
         data, and this project tracks progress on backfilling it. <br />
-        <span className={styles.subText}>
+        <span className="subText">
           (you might get something cool in the future if you get at least 50
           nominator edits!!)
         </span>
