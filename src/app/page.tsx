@@ -1,6 +1,6 @@
-import CommentList from "@/components/CommentList";
+import CommentList from "@/components/Home/CommentList";
 import styles from "./page.module.css";
-import RatingList from "@/components/RatingList";
+import RatingList from "@/components/Home/RatingList";
 import { db } from "@/db";
 import classNames from "classnames";
 import { Metadata } from "next";

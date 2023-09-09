@@ -5,8 +5,8 @@ import styles from "./TopBar.module.scss";
 import classNames from "classnames";
 import { GearIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
-import UserProfilePicture from "./shared/UserProfilePicture";
-import RulesetIcon from "./shared/Icons/RulesetIcon";
+import UserProfilePicture from "../shared/UserProfilePicture";
+import RulesetIcon from "../shared/Icons/RulesetIcon";
 
 export default function TopBar() {
   return (

@@ -1,8 +1,8 @@
 import { db } from "@/db";
-import UserProfilePicture from "./shared/UserProfilePicture";
+import UserProfilePicture from "../shared/UserProfilePicture";
 import classNames from "classnames";
 import styles from "./CommentList.module.scss";
-import BeatmapsetThumbnail from "./shared/BeatmapsetThumbnail";
+import BeatmapsetThumbnail from "../shared/BeatmapsetThumbnail";
 
 export interface CommentListProps {
   className?: string;
@@ -41,12 +41,10 @@ export default async function CommentList({ className }: CommentListProps) {
             key={comment.CommentID}
           >
             <BeatmapsetThumbnail setID={comment.SetID} />
-            <a href={`/profile/${comment.UserID}`}>
-              <UserProfilePicture
-                userID={comment.UserID}
-                username={comment.Username}
-              />
-            </a>
+            <UserProfilePicture
+              userID={comment.UserID}
+              username={comment.Username}
+            />
             <div className="flex-child">
               <a href={`/profile/${comment.UserID}`}>{comment.Username}</a>
               <div className={styles.commentContent}>

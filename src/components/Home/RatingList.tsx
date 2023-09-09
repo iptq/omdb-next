@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import styles from "./RatingList.module.scss";
-import StarRatingDisplay from "./shared/StarRatingDisplay";
+import StarRatingDisplay from "../shared/StarRatingDisplay";
 import { db } from "@/db";
-import BeatmapsetThumbnail from "./shared/BeatmapsetThumbnail";
-import UserProfilePicture from "./shared/UserProfilePicture";
+import BeatmapsetThumbnail from "../shared/BeatmapsetThumbnail";
+import UserProfilePicture from "../shared/UserProfilePicture";
 
 export interface RatingListProps {
   className?: string;
@@ -39,12 +39,10 @@ export default async function RatingList({ className }: RatingListProps) {
             key={rating.RatingID}
           >
             <BeatmapsetThumbnail setID={rating.SetID} />
-            <a href={`/profile/${rating.UserID}`}>
-              <UserProfilePicture
-                userID={rating.UserID}
-                username={rating.Username}
-              />
-            </a>
+            <UserProfilePicture
+              userID={rating.UserID}
+              username={rating.Username}
+            />
             <div className="flex-child">
               <a href={`/profile/${rating.UserID}`}>{rating.Username}</a>
               <div>

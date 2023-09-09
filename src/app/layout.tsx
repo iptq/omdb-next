@@ -1,4 +1,4 @@
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/Layout/TopBar";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
