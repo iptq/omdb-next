@@ -51,8 +51,10 @@
     display: none;
     position: absolute;
     background-color: #395f5f;
-    min-width: 8rem;
     z-index: 1;
+    line-height: 3em;
+    margin: -12px;
+    margin-top: 0.8em;
 
     a {
       float: none;

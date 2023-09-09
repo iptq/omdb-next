@@ -13,7 +13,7 @@ export interface StarRatingDisplayProps {
   onClick?: (key: number) => void;
 }
 
-export default function StarRatingDisplay({ rating, interactive = true, key, onClick }: StarRatingDisplayProps) {
+export default function StarRatingDisplay({ rating, interactive, key, onClick }: StarRatingDisplayProps) {
   const [currentRating, setCurrentRating] = useState<number>(rating);
   const [newRating, setNewRating] = useState<number>(rating);
 

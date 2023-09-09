@@ -34,19 +34,12 @@ export default async function Home() {
 
   return (
     <main className={classNames(styles.main, "content")}>
-      welcome to OMDB - a place to rate maps! discover new maps, check out
-      people&quot;s ratings, AND STUFF. <br />
+      welcome to OMDB - a place to rate maps! discover new maps, check out people&quot;s ratings, AND STUFF. <br />
       <span>
         {userCount} users, {ratingCount} ratings, {commentCount} comments
       </span>
       <hr />
-      <div
-        className={classNames(
-          "flex-container",
-          "column-when-mobile-container",
-          styles.ratingCommentContainer,
-        )}
-      >
+      <div className={classNames("flex-container", "column-when-mobile-container", styles.ratingCommentContainer)}>
         <RatingList className={styles.child} />
         <CommentList className={styles.child} />
       </div>
