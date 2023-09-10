@@ -21,7 +21,7 @@ export default function BeatmapCard({ difficulty }: BeatmapCardProps) {
   const { data, error, isLoading, mutate } = useSWR("/auth/user", fetcher);
 
   return (
-    <div className={classNames(styles.beatmapCard)} key={difficulty.BeatmapID}>
+    <div className={classNames(styles.beatmapCard, "alternating-bg")} key={difficulty.BeatmapID}>
       <div>
         <div>
           <span className={styles.alignWithText}>
