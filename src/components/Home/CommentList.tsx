@@ -3,6 +3,7 @@ import UserProfilePicture from "../shared/UserProfilePicture";
 import classNames from "classnames";
 import styles from "./CommentList.module.scss";
 import BeatmapsetThumbnail from "../shared/BeatmapsetThumbnail";
+import Link from "next/link";
 
 export interface CommentListProps {
   className?: string;
@@ -33,24 +34,13 @@ export default async function CommentList({ className }: CommentListProps) {
     <div className={classNames("scroll-y", className, styles.commentContainer)}>
       {comments.map((comment) => {
         return (
-          <div
-            className={classNames(
-              "flex-container alternating-bg",
-              styles.comment,
-            )}
-            key={comment.CommentID}
-          >
+          <div className={classNames("flex-container alternating-bg", styles.comment)} key={comment.CommentID}>
             <BeatmapsetThumbnail setID={comment.SetID} />
-            <UserProfilePicture
-              userID={comment.UserID}
-              username={comment.Username}
-            />
+            <UserProfilePicture userID={comment.UserID} username={comment.Username} />
             <div className="flex-child">
-              <a href={`/profile/${comment.UserID}`}>{comment.Username}</a>
+              <Link href={`/profile/${comment.UserID}`}>{comment.Username}</Link>
               <div className={styles.commentContent}>
-                <a href={`/mapset/${comment.SetID}`}>
-                  {isBlocked ? "[blocked comment]" : comment.Content}
-                </a>
+                <Link href={`/mapset/${comment.SetID}`}>{isBlocked ? "[blocked comment]" : comment.Content}</Link>
               </div>
             </div>
           </div>

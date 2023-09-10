@@ -27,8 +27,8 @@ export default function TopBar() {
           <div className={classNames(styles.topBarDropDown, styles.link)}>
             <div className="topBarLink topBarDropDownButton">maps</div>
             <div className={styles.dropdownContent}>
-              <a href="/maps/?m=08&amp;y=2023">latest</a>
-              <a href="/random/">random</a>
+              <Link href="/maps/?m=08&amp;y=2023">latest</Link>
+              <Link href="/random/">random</Link>
             </div>
           </div>
 
