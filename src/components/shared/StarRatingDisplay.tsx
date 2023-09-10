@@ -5,15 +5,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalf } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useMemo, useState } from "react";
 import classNames from "classnames";
+import { SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 export interface StarRatingDisplayProps {
   rating: number;
+  size?: SizeProp;
   interactive?: boolean;
   key?: number;
   onClick?: (key: number) => void;
+  showNumber?: boolean;
 }
 
-export default function StarRatingDisplay({ rating, interactive, key, onClick }: StarRatingDisplayProps) {
+export default function StarRatingDisplay({
+  rating,
+  size = "sm",
+  interactive,
+  key,
+  onClick,
+  showNumber,
+}: StarRatingDisplayProps) {
   const [currentRating, setCurrentRating] = useState<number>(rating);
   const [newRating, setNewRating] = useState<number>(rating);
 
@@ -59,7 +69,7 @@ export default function StarRatingDisplay({ rating, interactive, key, onClick }:
           <FontAwesomeIcon
             key={x}
             icon={newRating - 0.5 === x ? faStarHalf : faStar}
-            size="sm"
+            size={size}
             style={{ pointerEvents: "none" }}
           />
         );
@@ -74,7 +84,7 @@ export default function StarRatingDisplay({ rating, interactive, key, onClick }:
           <FontAwesomeIcon
             key={x}
             icon={faStar}
-            size="sm"
+            size={size}
             onClick={interactive ? (e) => handleClick(e, x + 1) : undefined}
             onMouseMove={interactive ? (e) => handleStarHover(e, x + 1) : undefined}
             onMouseLeave={interactive ? () => handleStarHover(undefined, currentRating) : undefined}
@@ -90,6 +100,7 @@ export default function StarRatingDisplay({ rating, interactive, key, onClick }:
     <div className={classNames(styles.starRatingDisplay, { pointer: interactive })}>
       {backgroundStars}
       <div className={styles.starForeground}>{foregroundStars}</div>
+      {showNumber && <span>{newRating.toFixed(1)}</span>}
     </div>
   );
 }
