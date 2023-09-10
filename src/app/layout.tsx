@@ -1,7 +1,6 @@
 import TopBar from "@/components/Layout/TopBar";
 import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
-
 import "./globals.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 

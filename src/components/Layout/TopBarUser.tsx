@@ -1,8 +1,6 @@
 import useSWR from "swr";
 import UserProfilePicture from "../shared/UserProfilePicture";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useReducer } from "react";
 import { useRouter } from "next/navigation";
 
 async function fetcher(url: RequestInfo | URL) {
@@ -13,8 +11,6 @@ async function fetcher(url: RequestInfo | URL) {
 export default function TopBarUser() {
   const router = useRouter();
   const { data, error, isLoading, mutate } = useSWR("/auth/user", fetcher);
-
-  console.log("DATA", data);
 
   const logout = async () => {
     await fetch("/auth/logout");
