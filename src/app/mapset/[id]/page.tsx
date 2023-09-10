@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./page.module.scss";
 import classNames from "classnames";
 import RulesetIcon from "@/components/shared/Icons/RulesetIcon";
+import StarRatingDisplay from "@/components/shared/StarRatingDisplay";
 
 interface MapsetProps {
   params: { id: string };
@@ -13,6 +14,10 @@ export async function generateMetadata({ params }: MapsetProps) {
   return {
     title: `Mapset`,
   };
+}
+
+async function getBeatmaps(id: number) {
+  return await db.selectFrom("Beatmap").selectAll("Beatmap").where("SetID", "=", id).orderBy("SR desc").execute();
 }
 
 async function getBeatmapset(id: number) {
@@ -37,6 +42,8 @@ export default async function Page({ params }: MapsetProps) {
     return <>sdfsdf</>;
   }
 
+  const difficulties = await getBeatmaps(parseInt(id));
+
   return (
     <main className="main content">
       <center>
@@ -47,27 +54,39 @@ export default async function Page({ params }: MapsetProps) {
           by <Link href={`../profile/${mapset.HostID}`}>{mapset.Username}</Link>
         </h1>
       </center>
-      <div className={classNames(styles.beatmapCard)}>
-        <div>
-          <span className={styles.alignWithText}>
-            <RulesetIcon ruleset="osu" />
-          </span>{" "}
-          Hard <span className="subText">3.03*</span>
-        </div>
-        <div>sdfsdf</div>
-        <div className="alignRight">
-          Rating: <b>3.43</b>{" "}
-          <span className="subText">
-            / 5.00 from <span className="forceTextColor">6</span> votes
-          </span>{" "}
-          <br />
-          Friend rating: <b>3.43</b>{" "}
-          <span className="subText">
-            / 5.00 from <span className="forceTextColor">6</span> votes
-          </span>
-        </div>
-        <div>sdfsdf</div>
-      </div>
+      {difficulties.map((difficulty) => {
+        return (
+          <div className={classNames(styles.beatmapCard)} key={difficulty.BeatmapID}>
+            <div>
+              <div>
+                <span className={styles.alignWithText}>
+                  <RulesetIcon ruleset={difficulty.Mode} />
+                </span>{" "}
+                {difficulty.DifficultyName} <span className="subText">{difficulty.SR.toFixed(2)}*</span>
+              </div>
+            </div>
+            <div>
+              <div>sdfsdf</div>
+            </div>
+            <div>
+              <div className="alignRight">
+                Rating: <b>{difficulty.WeightedAvg}</b>{" "}
+                <span className="subText">
+                  / 5.00 from <span className="forceTextColor">{difficulty.RatingCount}</span> votes
+                </span>{" "}
+                <br />
+                Friend rating: <b>3.43</b>{" "}
+                <span className="subText">
+                  / 5.00 from <span className="forceTextColor">6</span> votes
+                </span>
+              </div>
+            </div>
+            <div>
+              <StarRatingDisplay interactive rating={0} size="lg" showNumber />
+            </div>
+          </div>
+        );
+      })}
     </main>
   );
 }
