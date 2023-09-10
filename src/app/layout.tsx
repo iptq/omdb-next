@@ -1,4 +1,5 @@
 import TopBar from "@/components/Layout/TopBar";
+import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
 
 import "./globals.scss";
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <NextTopLoader />
         <TopBar />
         {children}
       </body>
