@@ -89,6 +89,14 @@ a {
   color: #a8a8a8;
 }
 
+.alignRight {
+  text-align: right !important;
+}
+
+.forceTextColor {
+  color: var(--text-color) !important;
+}
+
 .pointer {
   cursor: pointer;
 }

@@ -9,14 +9,13 @@ export default async function Page() {
   const { setsLeft, edits, mapsWithoutNominatorData } = await getData();
 
   return (
-    <div className={classNames(styles.main, "content")}>
+    <div className={classNames("main", "content")}>
       <div className={classNames(styles.body)}>
         <h2>{setsLeft} sets left.</h2>
-        There are {setsLeft} sets from modding v1 that have missing nominator
-        data, and this project tracks progress on backfilling it. <br />
+        There are {setsLeft} sets from modding v1 that have missing nominator data, and this project tracks progress on
+        backfilling it. <br />
         <span className="subText">
-          (you might get something cool in the future if you get at least 50
-          nominator edits!!)
+          (you might get something cool in the future if you get at least 50 nominator edits!!)
         </span>
       </div>
 
@@ -25,10 +24,7 @@ export default async function Page() {
           Most approved nominator edits
           {edits.map((edit, idx) => {
             return (
-              <div
-                className={classNames("alternating-bg", styles.box1)}
-                key={edit.UserID}
-              >
+              <div className={classNames("alternating-bg", styles.box1)} key={edit.UserID}>
                 {idx}
                 <UserProfilePicture userID={1} />
                 {edit.Username} - {edit.count.toString()}
@@ -41,10 +37,7 @@ export default async function Page() {
           Highest charting maps without nominator data
           {mapsWithoutNominatorData.map((row) => {
             return (
-              <div
-                className={classNames("alternating-bg", styles.box2)}
-                key={row.BeatmapID}
-              >
+              <div className={classNames("alternating-bg", styles.box2)} key={row.BeatmapID}>
                 <a href='/mapset/{$row["SetID"]}'>
                   {row.ChartRank}: {row.Artist} - {row.Title}
                 </a>
@@ -71,11 +64,7 @@ async function getEdits() {
     .selectFrom("BeatmapEditRequest")
     .innerJoin("Beatmap", "BeatmapEditRequest.BeatmapID", "Beatmap.BeatmapID")
     .innerJoin("OsuUser", "BeatmapEditRequest.UserID", "OsuUser.UserID")
-    .select(({ fn }) => [
-      "OsuUser.UserID",
-      fn.countAll().as("count"),
-      "OsuUser.Username",
-    ])
+    .select(({ fn }) => ["OsuUser.UserID", fn.countAll().as("count"), "OsuUser.Username"])
     .where("Beatmap.SetID", "is not", null)
     .groupBy("UserID")
     .orderBy("count desc")
@@ -87,17 +76,8 @@ async function getMapsWithoutNominatorData() {
   return await db
     .selectFrom("Beatmap")
     .innerJoin("BeatmapSet", "Beatmap.SetID", "BeatmapSet.SetID")
-    .leftJoin(
-      "BeatmapSetNominator",
-      "Beatmap.SetID",
-      "BeatmapSetNominator.SetID",
-    )
-    .select([
-      "Beatmap.BeatmapID",
-      "Beatmap.ChartRank",
-      "BeatmapSet.Artist",
-      "BeatmapSet.Title",
-    ])
+    .leftJoin("BeatmapSetNominator", "Beatmap.SetID", "BeatmapSetNominator.SetID")
+    .select(["Beatmap.BeatmapID", "Beatmap.ChartRank", "BeatmapSet.Artist", "BeatmapSet.Title"])
     .where("BeatmapSetNominator.SetID", "is", null)
     .where("Beatmap.ChartRank", "is not", null)
     .orderBy("Beatmap.ChartRank asc")
@@ -108,14 +88,8 @@ async function getMapsWithoutNominatorData() {
 async function getSetsLeft() {
   const row = await db
     .selectFrom("Beatmap")
-    .leftJoin(
-      "BeatmapSetNominator",
-      "Beatmap.SetID",
-      "BeatmapSetNominator.SetID",
-    )
-    .select(({ fn }) =>
-      fn.agg<number>("count", ["Beatmap.SetID"]).distinct().as("count"),
-    )
+    .leftJoin("BeatmapSetNominator", "Beatmap.SetID", "BeatmapSetNominator.SetID")
+    .select(({ fn }) => fn.agg<number>("count", ["Beatmap.SetID"]).distinct().as("count"))
     .where("BeatmapSetNominator.SetID", "is", null)
     .executeTakeFirst();
   return row?.count ?? 0;

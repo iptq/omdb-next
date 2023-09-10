@@ -1,0 +1,20 @@
+.beatmapCard {
+  width: 100%;
+  background-color: var(--accent-1);
+  --alternate-bg: var(--accent-2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 5.5em;
+
+  & > div {
+    flex-grow: 1;
+    height: 100%;
+    text-align: center;
+  }
+
+  .alignWithText {
+    position: relative;
+    top: 2px;
+  }
+}

@@ -1,6 +1,8 @@
 import { db } from "@/db";
-import Error from "next/error";
 import Link from "next/link";
+import styles from "./page.module.scss";
+import classNames from "classnames";
+import RulesetIcon from "@/components/shared/Icons/RulesetIcon";
 
 interface MapsetProps {
   params: { id: string };
@@ -45,6 +47,27 @@ export default async function Page({ params }: MapsetProps) {
           by <Link href={`../profile/${mapset.HostID}`}>{mapset.Username}</Link>
         </h1>
       </center>
+      <div className={classNames(styles.beatmapCard)}>
+        <div>
+          <span className={styles.alignWithText}>
+            <RulesetIcon ruleset="osu" />
+          </span>{" "}
+          Hard <span className="subText">3.03*</span>
+        </div>
+        <div>sdfsdf</div>
+        <div className="alignRight">
+          Rating: <b>3.43</b>{" "}
+          <span className="subText">
+            / 5.00 from <span className="forceTextColor">6</span> votes
+          </span>{" "}
+          <br />
+          Friend rating: <b>3.43</b>{" "}
+          <span className="subText">
+            / 5.00 from <span className="forceTextColor">6</span> votes
+          </span>
+        </div>
+        <div>sdfsdf</div>
+      </div>
     </main>
   );
 }
