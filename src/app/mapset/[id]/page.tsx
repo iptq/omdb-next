@@ -1,8 +1,9 @@
 import { db } from "@/db";
 import Link from "next/link";
 import BeatmapCard from "@/components/Mapset/BeatmapCard";
-import { Beatmap } from "@/db/types";
+import { Beatmap, Rating } from "@/db/types";
 import { Selectable } from "kysely";
+import RatingList from "@/components/Mapset/RatingList";
 
 interface MapsetProps {
   params: { id: string };
@@ -33,6 +34,23 @@ async function getBeatmapset(id: number) {
   }
 }
 
+async function getRatings(id: number) {
+  return await db
+    .selectFrom("Rating")
+    .innerJoin("Beatmap", "Beatmap.BeatmapID", "Rating.BeatmapID")
+    .innerJoin("OsuUser", "OsuUser.UserID", "Rating.UserID")
+    .selectAll("Rating")
+    .select("Beatmap.DifficultyName")
+    .select("OsuUser.Username")
+    .where("SetID", "=", id)
+    .execute();
+}
+
+export interface ExtendedRating extends Selectable<Rating> {
+  DifficultyName: string;
+  Username: string | null;
+}
+
 export default async function Page({ params }: MapsetProps) {
   const { id } = params;
   const mapset = await getBeatmapset(parseInt(id));
@@ -42,6 +60,16 @@ export default async function Page({ params }: MapsetProps) {
   }
 
   const difficulties: Selectable<Beatmap>[] = await getBeatmaps(parseInt(id));
+  const ratings: ExtendedRating[] = await getRatings(parseInt(id));
+
+  const groupedRatings: { [beatmapID: number]: ExtendedRating[] } = {};
+  ratings.forEach((rating) => {
+    const beatmapID = rating.BeatmapID;
+    if (!groupedRatings[beatmapID]) {
+      groupedRatings[beatmapID] = [];
+    }
+    groupedRatings[beatmapID].push(rating);
+  });
 
   return (
     <main className="main content">
@@ -56,6 +84,8 @@ export default async function Page({ params }: MapsetProps) {
       {difficulties.map((difficulty) => {
         return <BeatmapCard key={difficulty.BeatmapID} difficulty={difficulty} />;
       })}
+      <hr />
+      <RatingList ratings={ratings} />
     </main>
   );
 }

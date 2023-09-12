@@ -2,6 +2,7 @@ import UserProfilePicture from "@/components/shared/UserProfilePicture";
 import styles from "./page.module.scss";
 import { db } from "@/db";
 import classNames from "classnames";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -38,9 +39,9 @@ export default async function Page() {
           {mapsWithoutNominatorData.map((row) => {
             return (
               <div className={classNames("alternating-bg", styles.box2)} key={row.BeatmapID}>
-                <a href='/mapset/{$row["SetID"]}'>
+                <Link href='/mapset/{$row["SetID"]}'>
                   {row.ChartRank}: {row.Artist} - {row.Title}
-                </a>
+                </Link>
               </div>
             );
           })}
