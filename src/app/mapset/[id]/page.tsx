@@ -45,6 +45,7 @@ async function getRatings(id: number) {
     .select("Beatmap.DifficultyName")
     .select("OsuUser.Username")
     .where("SetID", "=", id)
+    .orderBy("DateRated desc")
     .execute();
 }
 

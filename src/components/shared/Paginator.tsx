@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import classNames from "classnames";
 import styles from "./Paginator.module.scss";
 
@@ -17,7 +17,7 @@ function Paginator({ currentPage, totalPages, onPageChange }: PaginatorProps) {
     }
   };
 
-  const generatePageNumbers = () => {
+  const generatePageNumbers = useMemo(() => {
     const adjacentPages = 1;
     const start = Math.max(1, currentPage - adjacentPages);
     const end = Math.min(totalPages, currentPage + adjacentPages);
@@ -33,16 +33,20 @@ function Paginator({ currentPage, totalPages, onPageChange }: PaginatorProps) {
     }
 
     return pages;
-  };
+  }, [currentPage, totalPages]);
 
-  const pagesToShow = generatePageNumbers();
+  if (totalPages == 1) {
+    return;
+  }
 
   return (
     <div className={classNames(styles.paginator)}>
-      <span className="pointer" onClick={() => handlePageChange(-1)}>
-        «
-      </span>
-      {pagesToShow.map((page) => (
+      {currentPage !== 1 && (
+        <span className="pointer" onClick={() => handlePageChange(-1)}>
+          «
+        </span>
+      )}
+      {generatePageNumbers.map((page) => (
         <span
           key={page}
           className={classNames("pointer", page === currentPage && styles.current)}
@@ -51,9 +55,11 @@ function Paginator({ currentPage, totalPages, onPageChange }: PaginatorProps) {
           {page}
         </span>
       ))}
-      <span className="pointer" onClick={() => handlePageChange(1)}>
-        »
-      </span>
+      {currentPage !== totalPages && (
+        <span className="pointer" onClick={() => handlePageChange(1)}>
+          »
+        </span>
+      )}
     </div>
   );
 }

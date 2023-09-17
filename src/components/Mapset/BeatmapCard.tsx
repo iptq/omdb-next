@@ -10,6 +10,7 @@ import useSWR from "swr";
 
 interface BeatmapCardProps {
   difficulty: Selectable<Beatmap>;
+  rating?: number;
 }
 
 async function fetcher(url: RequestInfo | URL) {
@@ -17,7 +18,7 @@ async function fetcher(url: RequestInfo | URL) {
   return await resp.json();
 }
 
-export default function BeatmapCard({ difficulty }: BeatmapCardProps) {
+export default function BeatmapCard({ difficulty, rating }: BeatmapCardProps) {
   const { data, error, isLoading, mutate } = useSWR("/auth/user", fetcher);
 
   return (
@@ -46,7 +47,7 @@ export default function BeatmapCard({ difficulty }: BeatmapCardProps) {
           </span>
         </div>
       </div>
-      <div>{data && <StarRatingDisplay interactive rating={0} size="lg" showNumber />}</div>
+      <div>{data && <StarRatingDisplay interactive rating={rating || 0} size="lg" showNumber />}</div>
     </div>
   );
 }
