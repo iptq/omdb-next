@@ -4,6 +4,8 @@ import BeatmapCard from "@/components/Mapset/BeatmapCard";
 import { Beatmap, Rating } from "@/db/types";
 import { Selectable } from "kysely";
 import RatingList from "@/components/Mapset/RatingList";
+import classNames from "classnames";
+import styles from "./page.module.scss";
 
 interface MapsetProps {
   params: { id: string };
@@ -85,7 +87,10 @@ export default async function Page({ params }: MapsetProps) {
         return <BeatmapCard key={difficulty.BeatmapID} difficulty={difficulty} />;
       })}
       <hr />
-      <RatingList ratings={ratings} />
+      <div className={classNames("flex-container", "column-when-mobile-container", styles.ratingCommentContainer)}>
+        <RatingList ratings={ratings} />
+        Gm
+      </div>
     </main>
   );
 }

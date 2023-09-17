@@ -1,0 +1,16 @@
+.paginator {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color: var(--accent-1);
+  margin-top: 1em;
+
+  span {
+    padding: 1em;
+  }
+
+  .current {
+    color: var(--text-color);
+    padding: 2em;
+  }
+}

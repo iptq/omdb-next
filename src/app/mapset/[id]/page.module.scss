@@ -1,0 +1,9 @@
+.ratingCommentContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  > .child {
+    width: 100%;
+  }
+}
