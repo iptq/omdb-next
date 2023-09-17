@@ -65,7 +65,6 @@ export default function RatingList({ ratings, className }: RatingListProps) {
   const displayedRatings = ratings.slice(startIndex, endIndex);
 
   const handlePageChange = (shift: number) => {
-    console.log(shift);
     setCurrentPage(currentPage + shift);
   };
 

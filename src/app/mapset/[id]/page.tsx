@@ -65,15 +65,6 @@ export default async function Page({ params }: MapsetProps) {
   const difficulties: Selectable<Beatmap>[] = await getBeatmaps(parseInt(id));
   const ratings: ExtendedRating[] = await getRatings(parseInt(id));
 
-  const groupedRatings: { [beatmapID: number]: ExtendedRating[] } = {};
-  ratings.forEach((rating) => {
-    const beatmapID = rating.BeatmapID;
-    if (!groupedRatings[beatmapID]) {
-      groupedRatings[beatmapID] = [];
-    }
-    groupedRatings[beatmapID].push(rating);
-  });
-
   return (
     <main className="main content">
       <center>
@@ -85,7 +76,15 @@ export default async function Page({ params }: MapsetProps) {
         </h1>
       </center>
       {difficulties.map((difficulty) => {
-        return <BeatmapCard key={difficulty.BeatmapID} difficulty={difficulty} />;
+        return (
+          <BeatmapCard
+            key={difficulty.BeatmapID}
+            difficulty={difficulty}
+            ratings={ratings.filter((rating) => {
+              return rating.BeatmapID === difficulty.BeatmapID;
+            })}
+          />
+        );
       })}
       <hr />
       <div className={classNames("flex-container", "column-when-mobile-container", styles.ratingCommentContainer)}>
