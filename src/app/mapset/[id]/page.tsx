@@ -1,11 +1,12 @@
 import { db } from "@/db";
 import Link from "next/link";
 import BeatmapCard from "@/components/Mapset/BeatmapCard";
-import { Beatmap, Rating } from "@/db/types";
+import { Beatmap, Comment, Rating } from "@/db/types";
 import { Selectable } from "kysely";
 import RatingList from "@/components/Mapset/RatingList";
 import classNames from "classnames";
 import styles from "./page.module.scss";
+import CommentContainer from "@/components/Mapset/Comments/CommentContainer";
 
 interface MapsetProps {
   params: { id: string };
@@ -49,8 +50,23 @@ async function getRatings(id: number) {
     .execute();
 }
 
+async function getComments(id: number) {
+  return await db
+    .selectFrom("Comment")
+    .innerJoin("OsuUser", "OsuUser.UserID", "Comment.UserID")
+    .selectAll("Comment")
+    .select("OsuUser.Username")
+    .where("SetID", "=", id)
+    .orderBy("DatePosted desc")
+    .execute();
+}
+
 export interface ExtendedRating extends Selectable<Rating> {
   DifficultyName: string;
+  Username: string | null;
+}
+
+export interface ExtendedComment extends Selectable<Comment> {
   Username: string | null;
 }
 
@@ -64,6 +80,7 @@ export default async function Page({ params }: MapsetProps) {
 
   const difficulties: Selectable<Beatmap>[] = await getBeatmaps(parseInt(id));
   const ratings: ExtendedRating[] = await getRatings(parseInt(id));
+  const comments: ExtendedComment[] = await getComments(parseInt(id));
 
   return (
     <main className="main content">
@@ -89,7 +106,7 @@ export default async function Page({ params }: MapsetProps) {
       <hr />
       <div className={classNames("flex-container", "column-when-mobile-container", styles.ratingCommentContainer)}>
         <RatingList ratings={ratings} />
-        Gm
+        <CommentContainer comments={comments} />
       </div>
     </main>
   );

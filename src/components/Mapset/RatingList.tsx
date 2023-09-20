@@ -74,7 +74,7 @@ export default function RatingList({ ratings, className }: RatingListProps) {
         {displayedRatings.map((rating) => {
           return (
             <div className={classNames(styles.ratingContainer, "alternating-bg")} key={rating.RatingID}>
-              <UserProfilePicture userID={rating.UserID} username="Michael" />
+              <UserProfilePicture userID={rating.UserID} username={rating.Username} />
               <div>
                 <Link href={`/profile/${rating.UserID}`}>{rating.Username}</Link>
                 <div>

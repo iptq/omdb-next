@@ -1,0 +1,43 @@
+.commentContainer {
+  background-color: var(--accent-1);
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .composer {
+    width: 100%;
+    text-align: right;
+    margin: 1em;
+
+    textarea {
+      width: 100%;
+      text-align: left;
+      resize: none;
+      height: 6em;
+      background-color: #203838;
+      border: 1px solid white;
+    }
+  }
+
+  .header {
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    width: 100%;
+    background-color: #203838;
+    padding: 0.25em;
+    margin: 0;
+
+    .timeStamp {
+      margin-left: auto;
+      text-align: right;
+    }
+  }
+
+  .content {
+    padding: 1em;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+}
