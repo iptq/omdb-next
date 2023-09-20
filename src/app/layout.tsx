@@ -3,6 +3,7 @@ import NextTopLoader from "nextjs-toploader";
 import type { Metadata } from "next";
 import "./globals.scss";
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import Footer from "@/components/Layout/Footer";
 
 export const metadata: Metadata = {
   title: {
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NextTopLoader />
         <TopBar />
         {children}
+        <Footer />
       </body>
     </html>
   );
