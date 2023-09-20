@@ -8,6 +8,7 @@ import styles from "./BeatmapCard.module.scss";
 import { Selectable } from "kysely";
 import useSWR from "swr";
 import { ExtendedRating } from "@/app/mapset/[id]/page";
+import RatingDistribution from "./RatingDistribution";
 
 interface BeatmapCardProps {
   difficulty: Selectable<Beatmap>;
@@ -33,7 +34,7 @@ export default function BeatmapCard({ difficulty, ratings }: BeatmapCardProps) {
         </div>
       </div>
       <div>
-        <div>sdfsdf</div>
+        <RatingDistribution ratings={ratings} beatmapID={difficulty.BeatmapID} />
       </div>
       <div>
         <div className="alignRight">

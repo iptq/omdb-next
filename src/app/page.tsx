@@ -5,6 +5,7 @@ import { db } from "@/db";
 import classNames from "classnames";
 import { Metadata } from "next";
 import { sql } from "kysely";
+import "react-tooltip/dist/react-tooltip.css";
 
 export const dynamic = "force-dynamic";
 
