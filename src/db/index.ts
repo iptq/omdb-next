@@ -2,6 +2,17 @@ import { DB } from "./types"; // this is the Database interface we defined earli
 import { createPool } from "mysql2"; // do not use 'mysql2/promises'!
 import { Kysely, MysqlDialect } from "kysely";
 
+// https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
+const registerService = (name: string, initFn: () => void) => {
+  if (process.env.NODE_ENV === "development") {
+    if (!(name in global)) {
+      global[name] = initFn();
+    }
+    return global[name];
+  }
+  return initFn();
+};
+
 // import { config } from "dotenv";
 // config();
 // config({ path: ".env.local", override: true });
@@ -17,12 +28,16 @@ const dialect = new MysqlDialect({
 // knows your database structure.
 // Dialect is passed to Kysely's constructor, and from now on, Kysely knows how
 // to communicate with your database.
-export const db = new Kysely<DB>({
-  dialect,
-  log: (event) => {
-    if (event.level === "error") {
-      console.log(event.query.sql);
-      console.log(event.query.parameters);
-    }
-  },
-});
+export const db = registerService(
+  "db",
+  () =>
+    new Kysely<DB>({
+      dialect,
+      log: (event) => {
+        if (event.level === "error") {
+          console.log(event.query.sql);
+          console.log(event.query.parameters);
+        }
+      },
+    }),
+);
