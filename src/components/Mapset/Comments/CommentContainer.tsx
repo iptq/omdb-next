@@ -5,7 +5,7 @@ import styles from "./CommentContainer.module.scss";
 import { ExtendedComment } from "@/app/mapset/[id]/page";
 import UserProfilePicture from "@/components/shared/UserProfilePicture";
 import Link from "next/link";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Paginator from "@/components/shared/Paginator";
 
 interface CommentContainerProps {
@@ -90,14 +90,14 @@ export default function CommentContainer({ comments }: CommentContainerProps) {
           <hr />
         </div>
         {displayedComments.map((comment) => (
-          <>
+          <Fragment key={comment.CommentID}>
             <div className={classNames(styles.header)}>
               <UserProfilePicture userID={comment.UserID} username={comment.Username} />
               <Link href={`/profile/${comment.UserID}`}>{comment.Username}</Link>
               <div className={classNames(styles.timeStamp)}>{getHumanTime(comment.DatePosted.toUTCString())}</div>
             </div>
             <div className={classNames(styles.content)}>{comment.Content}</div>
-          </>
+          </Fragment>
         ))}
       </div>
       <Paginator
