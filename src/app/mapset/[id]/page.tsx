@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import Link from "next/link";
 import BeatmapCard from "@/components/Mapset/BeatmapCard";
-import { Beatmap, Comment, Rating } from "@/db/types";
+import { Beatmap, BeatmapCreator, Comment, Rating } from "@/db/types";
 import { Selectable } from "kysely";
 import RatingList from "@/components/Mapset/RatingList";
 import classNames from "classnames";
@@ -61,6 +61,14 @@ async function getComments(id: number) {
     .execute();
 }
 
+async function getBeatmapCreators(beatmapIDs: number[]) {
+  return await db
+    .selectFrom("BeatmapCreator")
+    .selectAll()
+    .where("BeatmapCreator.BeatmapID", "in", beatmapIDs)
+    .execute();
+}
+
 export interface ExtendedRating extends Selectable<Rating> {
   DifficultyName: string;
   Username: string | null;
@@ -81,6 +89,9 @@ export default async function Page({ params }: MapsetProps) {
   const difficulties: Selectable<Beatmap>[] = await getBeatmaps(parseInt(id));
   const ratings: ExtendedRating[] = await getRatings(parseInt(id));
   const comments: ExtendedComment[] = await getComments(parseInt(id));
+  const creators: Selectable<BeatmapCreator>[] = await getBeatmapCreators(
+    difficulties.map((difficulties) => difficulties.BeatmapID),
+  );
 
   return (
     <main className="main content">
