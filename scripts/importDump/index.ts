@@ -12,18 +12,17 @@
 
 import { config } from "dotenv";
 config();
+config({ path: ".env", override: true });
 config({ path: ".env.local", override: true });
 
-import { db } from "../../src/db";
-import { PrismaClient, Prisma } from "../../old-db/generated/prisma-client-js";
-import { DB } from "@/db/types";
+import { Api } from "../../src/osuapi";
+import { ApiKey, DB } from "@/db/types";
+import { EB, newClient, oldClient, templateImport } from "./utils";
+import { GetResult } from "../../old-db/generated/prisma-client-js/runtime/library";
 import { InsertObject } from "kysely";
 import { Presets, SingleBar } from "cli-progress";
-import { Api } from "../../src/osuapi";
+import { Prisma } from "../../old-db/generated/prisma-client-js";
 import { insertOsuUsers } from "./db";
-
-const oldClient = new PrismaClient();
-const newClient = db;
 
 // Probably adjust according to RAM?
 const chunkSize = 100;
@@ -36,7 +35,11 @@ async function main() {
 
   // await importUsers();
   // await importBeatmaps();
-  await Promise.all([importRatings(), importComments()]);
+  await Promise.all([
+    // importRatings(),
+    // importComments(),
+    importApiKeys(),
+  ]);
 
   console.log("done.");
 
@@ -97,15 +100,16 @@ async function importUsers() {
         omdbUsers.push({
           UserID: user.UserID,
           CustomRatings: JSON.stringify(customRatings),
+          Weight: user.Weight?.toString(),
         });
-      })
+      }),
     );
 
     await insertOsuUsers(newClient, osuUsers);
     await newClient
       .insertInto("OmdbUser")
       .values(omdbUsers)
-      .onDuplicateKeyUpdate((eb) => ({
+      .onDuplicateKeyUpdate((eb: EB<"OmdbUser">) => ({
         CustomRatings: eb.ref("OmdbUser.CustomRatings"),
       }))
       .execute();
@@ -175,14 +179,14 @@ async function importBeatmaps() {
           Status: oldBeatmap.Status,
           SR: oldBeatmap.SR,
         });
-      })
+      }),
     );
 
     await insertOsuUsers(newClient, newUsers);
     await newClient
       .insertInto("BeatmapSet")
       .values(newBeatmapSets)
-      .onDuplicateKeyUpdate((eb) => ({
+      .onDuplicateKeyUpdate((eb: EB<"BeatmapSet">) => ({
         HostID: eb.ref("BeatmapSet.HostID"),
         Genre: eb.ref("BeatmapSet.Genre"),
         Lang: eb.ref("BeatmapSet.Lang"),
@@ -194,7 +198,7 @@ async function importBeatmaps() {
     await newClient
       .insertInto("Beatmap")
       .values(newBeatmaps)
-      .onDuplicateKeyUpdate((eb) => ({
+      .onDuplicateKeyUpdate((eb: EB<"Beatmap">) => ({
         SetID: eb.ref("Beatmap.SetID"),
         DifficultyName: eb.ref("Beatmap.DifficultyName"),
         Mode: eb.ref("Beatmap.Mode"),
@@ -243,14 +247,14 @@ async function importRatings() {
           Score: oldRating.Score!.toString(),
           DateRated: oldRating.date,
         });
-      })
+      }),
     );
 
     try {
       await newClient
         .insertInto("Rating")
         .values(newRatings)
-        .onDuplicateKeyUpdate((eb) => ({
+        .onDuplicateKeyUpdate((eb: EB<"Rating">) => ({
           Score: eb.ref("Rating.Score"),
           DateRated: eb.ref("Rating.DateRated"),
         }))
@@ -301,14 +305,14 @@ async function importComments() {
           Content: oldRating.Comment!,
           DatePosted: oldRating.date!,
         });
-      })
+      }),
     );
 
     try {
       await newClient
         .insertInto("Comment")
         .values(newComments)
-        .onDuplicateKeyUpdate((eb) => ({
+        .onDuplicateKeyUpdate((eb: EB<"Comment">) => ({
           Content: eb.ref("Comment.Content"),
           DatePosted: eb.ref("Comment.DatePosted"),
         }))
@@ -326,6 +330,23 @@ async function importComments() {
 
   bar.stop();
   console.log("Imported comments.");
+}
+
+async function importApiKeys() {
+  // const x = await oldClient.apikeys.findMany();
+  await templateImport({
+    destTableName: "ApiKey",
+    destPrimaryKey: "ApiKey",
+    srcModelName: "apikeys",
+    srcPrimaryKey: "ApiID",
+    convert: (old: GetResult<Prisma.$apikeysPayload, Prisma.apikeysFindManyArgs>): ApiKey => {
+      return { ApiKey: old.ApiKey!, Name: old.Name!, UserID: old.UserID! };
+    },
+    onDup: (eb: EB<"ApiKey">) => ({
+      Name: eb.ref("ApiKey.Name"),
+      UserID: eb.ref("ApiKey.UserID"),
+    }),
+  });
 }
 
 main();

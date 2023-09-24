@@ -63,11 +63,12 @@ model Beatmap {
     ChartRank       Int?
     ChartYearRank   Int?
     Timestamp       DateTime? @default(now()) @db.Timestamp(0)
-    RatingCount     Int?
-    WeightedAvg     Float?    @db.Float
     Blacklisted     Boolean   @default(false)
     BlacklistReason String?   @db.Text
-    controversy     Decimal?  @db.Decimal(10, 8)
+
+    CachedRatingCount Int?
+    CachedWeightedAvg Float?   @db.Float
+    ControversyScore  Decimal? @db.Decimal(10, 8)
 
     BeatmapSet          BeatmapSet           @relation(fields: [SetID], references: [SetID])
     RatingTags          RatingTag[]

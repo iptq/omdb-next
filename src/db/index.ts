@@ -3,7 +3,7 @@ import { createPool } from "mysql2"; // do not use 'mysql2/promises'!
 import { Kysely, MysqlDialect } from "kysely";
 
 // https://dev.to/noclat/fixing-too-many-connections-errors-with-database-clients-stacking-in-dev-mode-with-next-js-3kpm
-const registerService = (name: string, initFn: () => void) => {
+function registerService<T>(name: string, initFn: () => T): T {
   if (process.env.NODE_ENV === "development") {
     if (!(name in global)) {
       global[name] = initFn();
@@ -11,7 +11,7 @@ const registerService = (name: string, initFn: () => void) => {
     return global[name];
   }
   return initFn();
-};
+}
 
 // import { config } from "dotenv";
 // config();
